@@ -1,18 +1,187 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>svg绘图测试文件</title>
-	</head>
-	<body>
-		<div id="drawing"></div>
-		<div id="draw"></div>
-		<div id="qrcode" style="display: none;"></div>
-		<script src="js/jquery-1.9.1.min.js"></script>
-		<script src="js/jquery.qrcode.min.js"></script>
-		<script src="js/svg.js/dist/svg.js"></script>
-		<script src="js/svg.select.js/dist/svg.select.js"></script>
-		<script src="js/svg.resize.js/dist/svg.resize.js"></script>
-		<script src="js/svg.draggable.js/dist/svg.draggable.js"></script>
-	</body>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<title>svg绘图测试文件</title>
+	<link rel="stylesheet" href="css/default.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="css/easyui/easyui.css">
+	<link rel="stylesheet" type="text/css" href="css/easyui/icon.css">
+	<link rel="stylesheet" href="css/svg.css" type="text/css">
+	<link rel="stylesheet" href="js/svg.select.js/dist/svg.select.css" type="text/css">
+</head>
+<body class="easyui-layout" fit="true">
+	<div data-options="region:'east',split:true,title:'样式信息'" style="width:175px;" id="canvasRight">
+		<div id="tools-top" class="tools-panel">
+			<div id="canvas-panel" class="canvas-panel" style="display: block;">
+				<h3 class="panel-title">标签面板</h3>
+				<label class="draginput">
+					<input size="3" class="nosel" id="canvas-width" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>width:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" class="nosel" id="canvas-height" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>height:</span>
+				</label>
+			</div>
+			<div id="line-panel" class="line-panel" style="display: none;">
+				<h3 class="panel-title">线条面板</h3>
+				<label class="draginput">
+					<input size="3" id="line-x1" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>Start X:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="line-y1" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>Start Y:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="line-x2" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>End X:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="line-y2" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>End Y:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="line-width" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>Line Width:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="line-name" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>name:</span>
+				</label>
+				<button type="button" onclick="delSelectElement()" onselectstart="return false" class="draginput-button">删除直线</button>
+			</div>
+			<div id="text-panel" class="text-panel" style="display: none;">
+				<h3 class="panel-title">文字面板</h3>
+				<label class="draginput">
+					<input size="3" id="text-x" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>X:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="text-y" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>Y:</span>
+				</label>
+				<label class="draginput select">
+					<select id="text-family">
+						<option value="Helvetica, Arial, sans-serif">Helvetica</option>
+						<option value="Arvo, sans-serif">Arvo</option>
+						<option value="宋体">宋体</option>
+						<option value="Microsoft YaHei,sans-serif">微软雅黑</option>
+					</select>
+					<span>Font Family:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="text-content" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>内容:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="text-fontSize" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>Font Size:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="text-name" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>name:</span>
+				</label>
+				<button type="button" onclick="delSelectElement()" onselectstart="return false" class="draginput-button">删除文字</button>
+			</div>
+			<div id="image-panel" class="image-panel" style="display: none;">
+				<h3 class="panel-title">图片面板</h3>
+				<label class="draginput">
+					<input size="3" id="image-x" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>X:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="image-y" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>Y:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="image-width" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>Width:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="image-height" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>Height:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="image-name" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>name:</span>
+				</label>
+				<label class="draginput">
+					<input size="3" id="image-data" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>data:</span>
+				</label>
+				<button type="button" onclick="delSelectElement()" onselectstart="return false" class="draginput-button">删除图片</button>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'west',split:true,title:' '" style="width:57px;" id="canvasLeft">
+		<div class="us-left-nav" id="usLfetNav">
+			<div class="left-nav-menu" id = "leftNavMenu">
+				<div class="nav-menu" id="usNavMenu">
+					<ul>
+						<li>
+							<span class="nav-icon icon-text" onclick="createText()" onselectstart="return false" title="创建文本"></span>
+						</li>
+						<li>
+							<span class="nav-icon icon-img" onclick="createImg()" onselectstart="return false" title="创建二维码"></span>
+						</li>
+						<li>
+							<span class="nav-icon icon-line" onclick="createLine()" onselectstart="return false" title="创建竖线"></span>
+						</li>
+						<li>
+							<span class="nav-icon icon-linetra" onclick="createLineTran()" onselectstart="return false" title="创建横线"></span>
+						</li>
+						<li>
+							<span class="nav-icon icon-enlarge" onclick="enlargeSvg()" onselectstart="return false" title="放大"></span>
+						</li>
+						<li>
+							<span class="nav-icon icon-narrow" onclick="narrowSvg()" onselectstart="return false" title="缩小"></span>
+						</li>
+						<li>
+							<span class="nav-icon icon-save" onclick="saveSvg()" onselectstart="return false" title="保存方案"></span>
+						</li>
+						<li>
+							<span class="nav-icon icon-put" onclick="putSvg()" onselectstart="return false" title="导出"></span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="content" region="center" title="方案编辑" style="padding:5px;padding-top: 18px;padding-left: 18px;">
+		<div class=""  id="mainContent" style="">
+			<div id="drawBox">
+				<div id="rulers">
+				  <div id="ruler_corner"></div>
+				  <div id="ruler_x">
+				    <div id="ruler_x_cursor"></div>
+				    <div>
+				      <canvas height="18"></canvas>
+				    </div>
+				  </div>
+				  <div id="ruler_y">
+				    <div id="ruler_y_cursor"></div>
+				    <div>
+				      <canvas width="18"></canvas>
+				    </div>
+				  </div>
+				</div>
+				<div id="drawing"></div>
+				<div id="draw"></div>
+				<div id="qrcode" style="display: none;"></div>
+			</div>
+		</div>
+	</div>
+	
+	<script src="js/svg/jquery-1.9.1.min.js"></script>
+	<script src="js/easyui/jquery.easyui.min.js"></script>
+	<script src="js/easyui/easyui-lang-zh_CN.js"></script>
+	<script src="js/svg/jquery.qrcode.min.js"></script>
+	<script src="js/svg.js/dist/svg.js"></script>
+	<script src="js/svg.select.js/dist/svg.select.js"></script>
+	<script src="js/svg.resize.js/dist/svg.resize.js"></script>
+	<script src="js/svg.draggable.js/dist/svg.draggable.js"></script>
+	<script src="js/svg/svgPage.js"></script>
+</body>
 </html>

@@ -1,0 +1,104 @@
+#drawing .board {
+    background-color: #dbdbdb;
+	border: 1px solid #ccc;
+}
+#usNavMenu .nav-icon{
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	vertical-align: middle;
+	cursor: pointer;
+}
+.icon-text{
+	background: url(../img/icon-list.png) 0 -50px;
+}
+.icon-img{
+	background: url(../img/icon-list.png) 0 -125px;
+}
+.icon-line{
+	background: url(../img/icon-list.png) 0 -210px;
+}
+.icon-linetra{
+	background: url(../img/icon-list.png) 0 -150px;
+}
+.icon-enlarge{
+	background: url(../img/icon-list.png) 0 -25px;
+}
+.icon-narrow{
+	background: url(../img/icon-list.png) 0 0px;
+}
+.icon-save{
+	background: url(../img/icon-list.png) 0 -100px;
+}
+.icon-put{
+	background: url(../img/icon-list.png) 0 -75px;
+}
+
+/*easyui 样式修改*/
+.layout-panel-east .panel-header,.layout-panel-west .panel-header{
+	background: #9fa4ab;
+}
+.layout-panel-east .panel-title{
+	color: #4d4d4d;
+}
+.layout-button-right{
+	background:url(../img/Ico16-2.png);
+}
+.layout-button-left{
+	background:url(../img/Ico16-3.png);
+}
+.panel-header .layout-button-right:hover,.panel-header .layout-button-left:hover{
+	background-color: #9fa4ab;
+}
+.layout-expand{
+	background-color: #9fa4ab;
+}
+.layout-panel-center .panel-header{
+	background:#b7bdc4 ;
+	padding: 0;
+	height: 26px;
+}
+.layout-panel-center .panel-title{
+	height: 26px;
+	line-height: 26px;
+	color: #4d4d4d;
+	font-weight: normal;
+	overflow: hidden;
+}
+.layout-panel-center .panel-title ul{
+	display: inline-block;
+}
+.layout-panel-center .panel-title li{
+	display: inline-block;
+	margin-left: 18px;
+}
+.layout-panel-center .panel-title .headMsg-content{
+	background: #9fa4ab;
+	box-sizing: border-box;
+	padding: 3px 10px 3px 5px;
+	border-top:1px solid #878b91;
+	border-right: 1px solid #adb2b9;
+	border-bottom: 1px solid #bcc1c8;
+	border-left: 1px solid #90949b;
+}
+.panel-header, .panel-body{
+	border-color:#b3b3b3;
+}
+.layout-split-east{
+	border-left:0;
+}
+.layout-split-west{
+	border-right:0 ;
+}
+#content{
+	border-right: 0;
+}
+.messager-input{
+	height: 25px;
+    outline: 0;
+    line-height: 25;
+}
+.messager-icon{
+	position: relative;
+    top: -5px;
+}
