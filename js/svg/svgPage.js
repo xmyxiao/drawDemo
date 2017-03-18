@@ -12,6 +12,8 @@ $(function (){
     svgItem.param.draw = SVG('drawing').size(x, y);
 	svgItem.param.draw.addClass("board");
 	
+	updateRulers(true,1);//绘制标尺
+	
     $(document).click(function (e) {
     	e.preventDefault();
 		e.stopPropagation();
@@ -27,6 +29,17 @@ $(function (){
 				showCanveMsg();
 			}
 		}
+	});
+	
+	//标尺重绘
+	$(".layout-button-left").click(function(){
+		updateRulers(true,svgItem.saveParam.pageRate);
+	});
+	$(".layout-button-right").click(function(){
+		updateRulers(true,svgItem.saveParam.pageRate);
+	});
+	$(window).resize(function() {
+	    updateRulers(true,svgItem.saveParam.pageRate);
 	});
 });
 

@@ -1,6 +1,163 @@
+#drawBox{
+	width: 100%;
+	height: 100%;
+	font-size: 14px;
+}
+#drawing{
+	width: 100mm;
+	margin:auto;
+}
+#myDrawing{
+	width: 100%;
+}
+#drawing .board{
+	background-color: #dbdbdb;
+    border: 1px solid #ccc;
+}
+#drawing .board-rad{
+	background-color: #dbdbdb;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+}
+.board-rect,.board-text,.board-image,.board-line{
+	cursor: pointer;
+}
+#myDrawing {
+    width: 370px;
+    margin: auto;
+}
 #drawing .board {
     background-color: #dbdbdb;
 	border: 1px solid #ccc;
+}
+.draginput {
+    background: #eaf2ff;
+    border-radius: 3px;
+    -webkit-font-smoothing: antialiased;
+    width: 70px;
+    height: 70px;
+    display: block;
+    position: relative;
+    float: left;
+    margin: 0 8px 5px 0;
+}
+.draginput.select{
+	width: 150px;
+    height: 50px;
+}
+.draginput input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-size: 14px;
+    text-align: center;
+    color: #2aaeec;
+    padding: 30px 0 24px 0;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+.draginput span {
+    font-size: 12px;
+    color: #2aaeec;
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 5px;
+    text-align: left;
+}
+.draginput-button{
+	width: 70px;
+    height: 30px;
+    background-color: #eaf2ff;
+    outline: 0;
+    border: 0;
+    color: #30a6ea;
+}
+#text-family{
+	width: 150px;
+    height: 50px;
+    background-color: #eaf2ff;
+    border: 0;
+    padding: 20px 10px 10px 10px;
+    outline: 0;
+    color: #2aaeec;
+}
+
+#rulers > div {
+  position: absolute;
+  background: #dbdbdb;
+  z-index: 1;
+  overflow: hidden;
+  -webkit-font-smoothing: none;
+}
+
+#rulers #ruler_corner {
+  top: 28px;
+  left: 0px;
+  width: 16px;
+  height: 15px;
+  border: solid #dbdbdb  1px;
+  z-index: 2;
+}
+
+#ruler_x {
+  height: 18px;
+  top: 28px;
+  left: 18px;
+  right: 0px;
+  border-top: solid #dbdbdb 1px;
+  border-right: solid #dbdbdb 1px;
+}
+
+#ruler_x_cursor {
+  height: 15px;
+  border-right: dotted #999 1px;
+  position: absolute;
+  background: #2f2f2c;
+}
+
+#ruler_y_cursor {
+  width: 15px;
+  border-top: dotted #999 1px;
+  position: absolute;
+  background: #2f2f2c;
+}
+
+#rulers.moved #ruler_corner,
+#rulers.moved #ruler_x {
+  top: 101px;
+}
+
+#ruler_y {
+  width: 18px;
+  top: 45px;
+  left: 0px;
+  bottom: 0px;
+  border-left: solid#dbdbdb 1px;
+  border-bottom: solid#dbdbdb 1px;
+}
+
+#rulers.moved #ruler_y {
+  top: 116px;
+}
+
+
+#ruler_x canvas:first-child {
+  margin-left: 2px;
+}
+
+#ruler_x canvas {
+  float: left;
+}
+
+#ruler_y canvas {
+  margin-top: 1px;
+}
+
+#ruler_x > div, 
+#ruler_y > div {
+  overflow: hidden;
 }
 #usNavMenu .nav-icon{
 	display: inline-block;
