@@ -1,4 +1,4 @@
-#drawBox{
+#mainContent,#drawBox{
 	width: 100%;
 	height: 100%;
 	font-size: 14px;
@@ -26,9 +26,17 @@
     width: 370px;
     margin: auto;
 }
-#drawing .board {
-    background-color: #dbdbdb;
-	border: 1px solid #ccc;
+
+.tools-panel{
+	height: 100%;
+	padding-left: 10px;
+	background-color: #ced6de;
+}
+#tools-top .panel-title{
+	padding-top: 5px;
+	height: 25px;
+    line-height: 20px;
+    color: #585a5e;
 }
 .draginput {
     background: #eaf2ff;
@@ -158,6 +166,43 @@
 #ruler_x > div, 
 #ruler_y > div {
   overflow: hidden;
+}
+.table-content-box{
+	padding:0;
+}
+
+.table-content-body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.table-content-box{
+	position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+.us-left-nav {
+    height: 100%;
+}
+.left-nav-menu {
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    background: #b7bdc4;
+    height: 100%;
+}
+.nav-menu li {
+    padding: 0 15px;
+    line-height: 49px;
+    height: 49px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    border-bottom: 1px #9fa5ab solid;
+    color: #444;
 }
 #usNavMenu .nav-icon{
 	display: inline-block;
