@@ -40,7 +40,7 @@ $(function (){
 		svgItem.saveParam.resolution = svgItem.param.dpiArr[0],
 		svgItem.saveParam.remark = "备注",
 		svgItem.saveParam.guid = "guid";
-		
+	
 	svgItem.saveParam.width = x;
 	svgItem.saveParam.height = y;
 	

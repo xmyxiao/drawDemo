@@ -235,6 +235,23 @@
 .icon-put{
 	background: url(../img/icon-list.png) 0 -75px;
 }
+/*滚动条*/
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background: #ced6de;
+}
+::-webkit-scrollbar-corner {
+    background: #ced6de;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #999;
+}
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #ced6de;
+}
 
 /*easyui 样式修改*/
 .layout-panel-east .panel-header,.layout-panel-west .panel-header{
