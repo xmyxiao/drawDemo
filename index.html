@@ -62,6 +62,14 @@
 					<input size="3" id="text-y" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
 					<span>Y:</span>
 				</label>
+				<label class="draginput draginput-textWidth hidden">
+					<input size="3" id="text-width" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>Width:</span>
+				</label>
+				<label class="draginput draginput-textHeight hidden">
+					<input size="3" id="text-height" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
+					<span>Height:</span>
+				</label>
 				<label class="draginput select">
 					<select id="text-family">
 						<option value="Helvetica, Arial, sans-serif">Helvetica</option>
@@ -78,6 +86,13 @@
 				<label class="draginput">
 					<input size="3" id="text-fontSize" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
 					<span>Font Size:</span>
+				</label>
+				<label class="draginput select">
+					<select id="text-row">
+						<option value="false">false</option>
+						<option value="true">true</option>
+					</select>
+					<span>是否分行:</span>
 				</label>
 				<label class="draginput">
 					<input size="3" id="text-name" type="text" autocomplete="off" readonly="readonly" onselectstart="return false;">
@@ -167,6 +182,7 @@
 			</div>
 		</div>
 	</div>
+	<span id="temporaryText"></span>
 	
 	<script src="js/svg/jquery-1.9.1.min.js"></script>
 	<script src="js/easyui/jquery.easyui.min.js"></script>

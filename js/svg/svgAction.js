@@ -51,6 +51,12 @@ $(function (){
 		else if($(this).attr("id")=="text-y"){//文字y方向
 			svgChange.textY($(this).val());
 		}
+		else if($(this).attr("id")=="text-width"){//文字宽度
+			svgChange.textWidth($(this).val());
+		}
+		else if($(this).attr("id")=="text-height"){//文字高度
+			svgChange.textHeight($(this).val());
+		}
 		else if($(this).attr("id")=="text-fontSize"){//字号
 			svgChange.textFontSize($(this).val());
 		}
@@ -97,7 +103,24 @@ $(function (){
 			SvgItem.attr("font-family",textFamily);
 		}
 	});
-	
+	//文字换行
+	$("#text-row").change(function(){
+		var row = $(this).children('option:selected').val();
+		if(svgItem.param.rectSel){
+			var SvgItem = svgItem.param.rectSel;
+			getPanelChange(SvgItem,"data-row");
+			SvgItem.attr("data-row",row);
+			if(row){
+				$("#text-width").val(pxtranslate(SvgItem.attr("width"),"x"));
+				$("#text-height").val(pxtranslate(SvgItem.attr("height"),"y"));
+				$("#text-panel .draginput-textWidth").removeClass("hidden");
+				$("#text-panel .draginput-textHeight").removeClass("hidden");
+			}else{
+				$("#text-panel .draginput-textWidth").addClass("hidden");
+				$("#text-panel .draginput-textHeight").addClass("hidden");
+			}
+		}
+	});	
 });
 //更改svg图像
 svgChange = {
@@ -178,6 +201,42 @@ svgChange = {
 	    if(isNumber(para)){
 	    	getPanelChange(SvgItem,"y");
 	    	SvgItem.attr("y",Number(mmtranslate(para,"y")).toFixed(2));
+	    }else{
+	    	$.messager.alert("提示","输入格式不正确！","info");
+	    }
+	},
+	textWidth : function(para){  //文本长度
+		var SvgItem = svgItem.param.rectSel;
+		if(para.length==0){
+			para = SvgItem.attr("width");
+		}
+	    if(isNumber(para)){
+	    	getPanelChange(SvgItem,"width");
+	    	SvgItem.attr("width",Number(mmtranslate(para,"y")).toFixed(2));
+	    	var row = setTextRow(Number(mmtranslate(para,"y")).toFixed(2),SvgItem.attr("font-size"),SvgItem.text());
+	    	SvgItem.clear();
+	    	/*for(var i = 0; i < row.length; i++){
+	    		var tspan = '<tspan x='+SvgItem.attr("x")+' y='+SvgItem.attr("y")+' dy='+SvgItem.attr("dy") * (i+1)+'>'+row[i]+'</tspan>'
+	    		$(SvgItem.node).append(tspan);
+	    	}*/
+    		SvgItem.text(function(add) {
+    			for(var i = 0; i < row.length; i++){
+					add.tspan(row[i]).attr("x",SvgItem.attr("x"))
+					.attr("y",SvgItem.attr("y")).attr("dy",SvgItem.attr("dy") * (i+1))
+				}
+			});
+	    }else{
+	    	$.messager.alert("提示","输入格式不正确！","info");
+	    }
+	},
+	textHeight : function(para){  //文本高度
+		var SvgItem = svgItem.param.rectSel;
+		if(para.length==0){
+			para = SvgItem.attr("height");
+		}
+	    if(isNumber(para)){
+	    	getPanelChange(SvgItem,"height");
+	    	SvgItem.attr("height",Number(mmtranslate(para,"y")).toFixed(2));
 	    }else{
 	    	$.messager.alert("提示","输入格式不正确！","info");
 	    }

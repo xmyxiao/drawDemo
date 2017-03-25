@@ -52,3 +52,15 @@ function returnDy(str){
 function toNumFix(num){
 	return Number(num).toFixed(2);
 }
+//获取文本的页面宽高
+function getTextWandh(textSize,textStr){
+	var textNode = $("#temporaryText");
+	textNode.attr("style","font-size: "+textSize+";");
+	textNode.text(textStr);
+	var pare = {
+		width : textNode.width(),
+		height : textNode.height()
+	}
+	textNode.text("");
+	return pare;
+}

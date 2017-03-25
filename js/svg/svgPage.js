@@ -113,6 +113,18 @@ function createText(objParam){
 	    if(objParam.name==""){
 			objParam.name = getSvgName(text.attr("id"));
 		}
+	    if(objParam.dateRow==""){
+			objParam.dateRow = "false";
+		}
+	    if(objParam.width==""){
+			objParam.width = textWandH.width;
+		}
+	    if(objParam.height==""){
+			objParam.height = textWandH.height;
+		}
+	    text.attr("date-row",objParam.dateRow);
+	    text.attr("width",objParam.width);
+		text.attr("height",objParam.height);
 	    text.attr("name",objParam.name);
 	    text.attr("font-family",objParam.fontFamily);
 	    textOnEvent(text);
@@ -267,6 +279,9 @@ function rebulidSvg(str){
 				content : obj.text(),
 				name : obj.attr("name") || getSvgName(obj.attr("id")),
 				dy : returnDy(obj.attr("font-size")) || "8.66",
+				dateRow : obj.attr("date-row") || "",
+				width : obj.attr("width") || "",
+				height : obj.attr("height") || "",
 				fontFamily : obj.attr("font-family") || "Helvetica, Arial, sans-serif"
 			}
 			createText(objParam);
