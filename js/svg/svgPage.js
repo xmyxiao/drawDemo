@@ -137,6 +137,10 @@ function createText(objParam){
 			    text.attr('font-size',"8pt");
 			    text.attr("dy","8.66");
 			    text.attr("font-family","宋体");
+			    text.attr("date-row","false");
+			    var textWandH = getTextWandh("8pt",str);
+			    text.attr("width",textWandH.width);
+			    text.attr("height",textWandH.height);
 			    text.attr("name",getSvgName(text.attr("id")));
 			    textOnEvent(text);
 			}
@@ -486,6 +490,28 @@ function setContentTitle(svgItem,x,y){
 	var contentdiv = $(".layout-panel-center .panel-title");
 	contentdiv.text("");
 	contentdiv.append(html);
+}
+//文本根据长度分行
+function setTextRow(textWidth,textSize,textStr){
+	var textNode = $("#temporaryText"),
+		textRow = new Array,
+		firstText;
+	textNode.attr("style","font-size: "+textSize+";");
+	textNode.text("");
+	for(;textStr.length > 0;){
+		firstText = textStr.substr(0,1);
+		textNode.text(textNode.text() + firstText);
+		if(textNode.width() > textWidth){
+			textRow.push(textNode.text());
+			textNode.text("");
+		}
+		textStr = textStr.substr(1,textStr.length-1);
+		if(textStr.length == 0 && textNode.width() < textWidth){
+			textRow.push(textNode.text());
+			textNode.text("");
+		}
+	}
+	return textRow;
 }
 //文本元素绑定事件
 function textOnEvent(text){

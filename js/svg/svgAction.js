@@ -110,7 +110,7 @@ $(function (){
 			var SvgItem = svgItem.param.rectSel;
 			getPanelChange(SvgItem,"data-row");
 			SvgItem.attr("data-row",row);
-			if(row){
+			if(row == "true"){
 				$("#text-width").val(pxtranslate(SvgItem.attr("width"),"x"));
 				$("#text-height").val(pxtranslate(SvgItem.attr("height"),"y"));
 				$("#text-panel .draginput-textWidth").removeClass("hidden");
@@ -215,16 +215,18 @@ svgChange = {
 	    	SvgItem.attr("width",Number(mmtranslate(para,"y")).toFixed(2));
 	    	var row = setTextRow(Number(mmtranslate(para,"y")).toFixed(2),SvgItem.attr("font-size"),SvgItem.text());
 	    	SvgItem.clear();
-	    	/*for(var i = 0; i < row.length; i++){
-	    		var tspan = '<tspan x='+SvgItem.attr("x")+' y='+SvgItem.attr("y")+' dy='+SvgItem.attr("dy") * (i+1)+'>'+row[i]+'</tspan>'
-	    		$(SvgItem.node).append(tspan);
-	    	}*/
-    		SvgItem.text(function(add) {
+	    	for(var i = 0; i < row.length; i++){
+	    	 	SvgItem.tspan(row[i]).attr("dy",SvgItem.attr("dy"));
+	    		//var tspan = '<tspan x='+SvgItem.attr("x")+' y='+SvgItem.attr("y")+' dy='+SvgItem.attr("dy") * (i+1)+'>'+row[i]+'</tspan>'
+	    		//$(SvgItem.node).append(tspan);
+	    	}
+    		/*SvgItem.text(function(add) {
     			for(var i = 0; i < row.length; i++){
 					add.tspan(row[i]).attr("x",SvgItem.attr("x"))
 					.attr("y",SvgItem.attr("y")).attr("dy",SvgItem.attr("dy") * (i+1))
 				}
-			});
+			});*/
+			
 	    }else{
 	    	$.messager.alert("提示","输入格式不正确！","info");
 	    }
