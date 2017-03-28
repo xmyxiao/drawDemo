@@ -72,9 +72,7 @@ $(function (){
         var obj = e.target || e.srcElement;
 		if(svgItem.param.rectSel){
 			if(obj!=svgItem.param.rectSel.node && obj == $("#drawing svg")[0]){
-				svgItem.param.rectSel.resize('stop');
-				svgItem.param.rectSel.selectize(false);
-				svgItem.param.rectSel = null;
+				stopRectSel();
 				showCanveMsg();
 			}
 		}
@@ -142,6 +140,7 @@ function createText(objParam){
 			    text.attr("width",textWandH.width);
 			    text.attr("height",textWandH.height);
 			    text.attr("name",getSvgName(text.attr("id")));
+			    $("#svgSelect").append("<option value="+text.attr("id")+"><span>Text&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>"+text.attr("name")+"<span></option>");
 			    textOnEvent(text);
 			}
 		});
@@ -172,6 +171,7 @@ function createImg(objParam){
 				image.attr("name",getSvgName(image.attr("id")));
 				image.attr("imgdata",str);
 				image.attr("imgType","qrCode");
+				$("#svgSelect").append("<option value="+image.attr("id")+"><span>Image&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>"+image.attr("name")+"<span></option>");
 				imageOnEvent(image);
 			}
 		});
@@ -196,6 +196,7 @@ function createLine(objParam){
 		line.attr("name",getSvgName(line.attr("id")));
 		line.attr("pt","1");
 		line.attr("stroke-width","1pt");
+		$("#svgSelect").append("<option value="+line.attr("id")+"><span>Line&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>"+line.attr("name")+"<span></option>");
 	}
 	lineOnEvent(line);
 }
@@ -207,6 +208,7 @@ function createLineTran(){
 	line.attr("name",getSvgName(line.attr("id")));
 	line.attr("pt","1");
 	line.attr("stroke-width","1pt");
+	$("#svgSelect").append("<option value="+line.attr("id")+"><span>Line&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>"+line.attr("name")+"<span></option>");
 	lineOnEvent(line);
 }
 //二维码图片地址
@@ -268,6 +270,7 @@ function rebulidSvg(str){
 				strokeWidth : obj.attr("stroke-width") || "2pt"
 			}
 			createLine(objParam);
+			$("#svgSelect").append("<option value="+obj.attr("id")+"><span>Line&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>"+objParam.name+"<span></option>");
 		}
 	}
 	
@@ -289,6 +292,7 @@ function rebulidSvg(str){
 				fontFamily : obj.attr("font-family") || "Helvetica, Arial, sans-serif"
 			}
 			createText(objParam);
+			$("#svgSelect").append("<option value="+obj.attr("id")+"><span>Text&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>"+objParam.name+"<span></option>");
 		}
 	}
 	
@@ -308,6 +312,7 @@ function rebulidSvg(str){
 				type : obj.attr("imgType") || "qrCode",
 			}
 			createImg(objParam);
+			$("#svgSelect").append("<option value="+obj.attr("id")+"><span>Image&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>"+objParam.name+"<span></option>");
 		}
 	}
 	historyDo.pare.undoArr.length = 0;
@@ -451,7 +456,6 @@ function mmtranslate(pare,type){
 }
 //转为毫米单位
 function svgTomm(){
-	var rate = svgItem.saveParam.pageRate
 	$("#drawing text").each(function(){//文字毫米单位
 		$(this).attr("mm_x",pxtranslate($(this).attr("x"),"x")+"mm");
 		$(this).attr("mm_y",pxtranslate($(this).attr("y"),"y")+"mm");
@@ -473,7 +477,8 @@ function svgTomm(){
 function pushNameId(item){
 	var svgIdName = {
 		id : item.attr("id"),
-		name : item.attr("name")
+		name : item.attr("name"),
+		itemNode : item
 	}
 	var value = svgIdName.name.replace(/[^0-9]/ig,""); 
 	if(value>0&&value>SVG.did){
@@ -529,11 +534,7 @@ function textOnEvent(text){
 			}
 		});
 		text.on("click",function(){
-			if(svgItem.param.rectSel){
-				svgItem.param.rectSel.resize('stop');
-				svgItem.param.rectSel.selectize(false);
-				svgItem.param.rectSel = null;
-			}
+			stopRectSel();
 			text.selectize().resize();
 			text.on('resizedone', function(event){
 				if(Number(historyDo.pare.x) != Number($(event.target).attr("x")) 
@@ -569,11 +570,7 @@ function imageOnEvent(image){
 		image.on('click',function(e){
 			e.preventDefault();
 			e.stopPropagation();
-			if(svgItem.param.rectSel){
-				svgItem.param.rectSel.resize('stop');
-				svgItem.param.rectSel.selectize(false);
-				svgItem.param.rectSel = null;
-			}
+			stopRectSel();
 	        image.selectize().resize();
 			image.selectize().resize().draggable();
 			image.on('resizedone', function(event){
@@ -622,11 +619,7 @@ function lineOnEvent(line){
 	line.on('click',function(e){
 		e.preventDefault();
 		e.stopPropagation();
-		if(svgItem.param.rectSel){
-			svgItem.param.rectSel.resize('stop');
-			svgItem.param.rectSel.selectize(false);
-			svgItem.param.rectSel = null;
-		}
+		stopRectSel();
 		line.selectize().resize();
 		line.on('resizedone', function(event){
 			if(Number(historyDo.pare.x) != Number($(event.target).attr("x1")) 

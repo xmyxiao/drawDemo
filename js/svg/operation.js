@@ -64,3 +64,48 @@ function getTextWandh(textSize,textStr){
 	textNode.text("");
 	return pare;
 }
+//删除下拉框选项
+function optionDel(itemId){
+	$("#svgSelect").find("option").each(function(){
+		if($(this).val() == itemId){
+			$(this).remove();
+		}
+	});
+}
+//添加下拉框选项
+function optionAdd(svgItem){
+	if(svgItem.nodeName){
+		var item = {
+			type : svgItem.nodeName,
+			id : $(svgItem).attr("id"),
+			name : $(svgItem).attr("name")
+		}
+	}else{
+		var item = {
+			type : svgItem.type,
+			id : $(svgItem.node).attr("id"),
+			name : $(svgItem.node).attr("name")
+		}
+	}
+	switch(item.type){
+	case "line":
+		$("#svgSelect").append("<option value="+item.id+"><span>Line&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>"+item.name+"<span></option>");
+		break;
+	case "text":
+		$("#svgSelect").append("<option value="+item.id+"><span>Text&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>"+item.name+"<span></option>");
+		break;
+	case "image":
+		$("#svgSelect").append("<option value="+item.id+"><span>Image&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>"+item.name+"<span></option>");
+		break;	
+	default:
+		return false;
+	}
+}
+//取消选中
+function stopRectSel(){
+	if(svgItem.param.rectSel){
+		svgItem.param.rectSel.resize('stop');
+		svgItem.param.rectSel.selectize(false);
+		svgItem.param.rectSel = null;
+	}
+}

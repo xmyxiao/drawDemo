@@ -66,16 +66,17 @@ historyDo.unfn = {
 		}else{
 			$(item.value.nextEle).before(item.actElemen);
 		}
+		optionAdd(item.actElemen);
 		historyDo.refn.pushRedo(item);
 	},
 	unadd : function(item){//撤销新增
 		if(item.actElemen == svgItem.param.rectSel){
-			svgItem.param.rectSel.resize('stop');
-			svgItem.param.rectSel.selectize(false);
-			svgItem.param.rectSel = null;
+			stopRectSel();
 			showCanveMsg();
 		}
 		item.value.nextEle = item.actElemen.node.nextSibling;
+		var itemId = item.actElemen.id();
+		optionDel(itemId);
 		item.actElemen.remove();
 		historyDo.refn.pushRedo(item);
 	},
@@ -133,12 +134,7 @@ historyDo.unfn = {
 				item.value.reval = changeItem.attr(item.value.eleAttr);
 				changeItem.attr(item.value.eleAttr,item.value.oldval);
 			}
-			
-			if(svgItem.param.rectSel){
-				svgItem.param.rectSel.resize('stop');
-				svgItem.param.rectSel.selectize(false);
-				svgItem.param.rectSel = null;
-			}
+			stopRectSel();
 			changeItem.selectize().resize();
 			svgItem.param.rectSel = changeItem;
 			switch(item.value.eleType){
@@ -309,12 +305,12 @@ historyDo.refn = {
 	redel : function(item){//再次删除
 		if(svgItem.param.rectSel){
 			if(item.actElemen == svgItem.param.rectSel.node){
-				svgItem.param.rectSel.resize('stop');
-				svgItem.param.rectSel.selectize(false);
-				svgItem.param.rectSel = null;
+				stopRectSel();
 				showCanveMsg();
 			}
 		}
+		var itemId = $(item.actElemen).attr("id");
+		optionDel(itemId);
 		item.actElemen.remove();
 		historyDo.unfn.pushUndo(item);
 	},
@@ -358,12 +354,7 @@ historyDo.refn = {
 			}else{
 				changeItem.attr(item.value.eleAttr,item.value.reval);
 			}
-			
-			if(svgItem.param.rectSel){
-				svgItem.param.rectSel.resize('stop');
-				svgItem.param.rectSel.selectize(false);
-				svgItem.param.rectSel = null;
-			}
+			stopRectSel();
 			changeItem.selectize().resize();
 			svgItem.param.rectSel = changeItem;
 			switch(item.value.eleType){

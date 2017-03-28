@@ -121,6 +121,38 @@ $(function (){
 			}
 		}
 	});	
+	//下拉框
+	$("#svgSelect").change(function(){
+		var svgSelect;
+		if($(this).val() != "未选中"){
+			var svgSelect ;
+			for(var i = 0 ; i < svgItem.param.idArr.length; i++){
+				if($(this).val() == svgItem.param.idArr[i].id){
+					svgSelect = svgItem.param.idArr[i].itemNode;
+					break;
+				}
+			}
+			stopRectSel();
+			svgItem.param.rectSel = svgSelect;
+			svgSelect.selectize().resize();
+			switch(svgSelect.type){
+			case "text":
+				showTextMsg();
+				break;
+			case "line":
+				showLineMsg();
+				break;
+			case "image":
+				showImageMsg();
+				break;	
+			default:
+				return false;
+			}
+		}else{
+			stopRectSel();
+			showCanveMsg();
+		}
+	});
 });
 //更改svg图像
 svgChange = {
@@ -215,18 +247,11 @@ svgChange = {
 	    	SvgItem.attr("width",Number(mmtranslate(para,"y")).toFixed(2));
 	    	var row = setTextRow(Number(mmtranslate(para,"y")).toFixed(2),SvgItem.attr("font-size"),SvgItem.text());
 	    	SvgItem.clear();
-	    	for(var i = 0; i < row.length; i++){
-	    	 	SvgItem.tspan(row[i]).attr("dy",SvgItem.attr("dy"));
-	    		//var tspan = '<tspan x='+SvgItem.attr("x")+' y='+SvgItem.attr("y")+' dy='+SvgItem.attr("dy") * (i+1)+'>'+row[i]+'</tspan>'
-	    		//$(SvgItem.node).append(tspan);
-	    	}
-    		/*SvgItem.text(function(add) {
+    		SvgItem.text(function(add) {
     			for(var i = 0; i < row.length; i++){
-					add.tspan(row[i]).attr("x",SvgItem.attr("x"))
-					.attr("y",SvgItem.attr("y")).attr("dy",SvgItem.attr("dy") * (i+1))
+					add.tspan(row[i]).newLine();
 				}
-			});*/
-			
+			});
 	    }else{
 	    	$.messager.alert("提示","输入格式不正确！","info");
 	    }
@@ -390,7 +415,7 @@ svgChange = {
 //线条消息显示
 function showLineMsg(){
 	var line = svgItem.param.rectSel;
-	$("#tools-top").children().attr("style","display:none");
+	$("#tools-top").children("div").attr("style","display:none");
 	$("#line-panel").attr("style","display:block");
 	$("#line-x1").val(pxtranslate(line.attr("x1"),"x"));
 	$("#line-y1").val(pxtranslate(line.attr("y1"),"y"));
@@ -403,16 +428,18 @@ function showLineMsg(){
 	}else{
 		$("#line-width").val(line.attr("stroke-width"));
 	}
+	$("#svgSelect").val(line.attr("id"));
 }
 //面板消息显示
 function showCanveMsg(){
-	$("#tools-top").children().attr("style","display:none");
+	$("#tools-top").children("div").attr("style","display:none");
 	$("#canvas-panel").attr("style","display:block");
+	$("#svgSelect").val("未选中");
 }
 //文字消息显示
 function showTextMsg(){
 	var text = svgItem.param.rectSel;
-	$("#tools-top").children().attr("style","display:none");
+	$("#tools-top").children("div").attr("style","display:none");
 	$("#text-panel").attr("style","display:block");
 	$("#text-x").val(pxtranslate(text.attr("x"),"x"));
 	$("#text-y").val(pxtranslate(text.attr("y"),"y"));
@@ -424,11 +451,12 @@ function showTextMsg(){
 	$("#text-content").val(text.text());
 	$("#text-name").val(text.attr("name"));
 	$("#text-family").val(text.attr("font-family"));
+	$("#svgSelect").val(text.attr("id"));
 }
 //图片消息显示
 function showImageMsg(){
 	var image = svgItem.param.rectSel;
-	$("#tools-top").children().attr("style","display:none");
+	$("#tools-top").children("div").attr("style","display:none");
 	$("#image-panel").attr("style","display:block");
 	$("#image-x").val(pxtranslate(image.attr("x"),"x"));
 	$("#image-y").val(pxtranslate(image.attr("y"),"y"));
@@ -436,15 +464,20 @@ function showImageMsg(){
 	$("#image-height").val(pxtranslate(image.attr("height"),"y"));
 	$("#image-name").val(image.attr("name"));
 	$("#image-data").val(image.attr("imgdata"));
+	$("#svgSelect").val(image.attr("id"));
 }
 //删除选中元素
 function delSelectElement(){
 	if(svgItem.param.rectSel){
+		var itemId = svgItem.param.rectSel.id();
+		$("#svgSelect").find("option").each(function(){
+			if($(this).val() == itemId){
+				$(this).remove();
+			}
+		});
 		historyDo.getfn.del(svgItem.param.rectSel);
-		svgItem.param.rectSel.resize('stop');
-		svgItem.param.rectSel.selectize(false);
 		svgItem.param.rectSel.remove();
-		svgItem.param.rectSel = null;
+		stopRectSel();
 		showCanveMsg();
 	}
 }
