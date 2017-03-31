@@ -113,11 +113,28 @@ $(function (){
 			if(row == "true"){
 				$("#text-width").val(pxtranslate(SvgItem.attr("width"),"x"));
 				$("#text-height").val(pxtranslate(SvgItem.attr("height"),"y"));
+				var row = setTextRow(Number(SvgItem.attr("width")).toFixed(2),SvgItem.attr("font-size"),SvgItem.text());
+		    	SvgItem.clear();
+	    		SvgItem.text(function(add) {
+	    			for(var i = 0; i < row.length; i++){
+						add.tspan(row[i]).newLine();
+					}
+				});
 				$("#text-panel .draginput-textWidth").removeClass("hidden");
 				$("#text-panel .draginput-textHeight").removeClass("hidden");
 			}else{
 				$("#text-panel .draginput-textWidth").addClass("hidden");
 				$("#text-panel .draginput-textHeight").addClass("hidden");
+				var pare = "";
+				if($(SvgItem.node).find("tspan").length > 0){
+					for(var i =0;i<$(SvgItem.node).find("tspan").length;i++){
+						pare += $($(SvgItem.node).find("tspan")[i]).text();
+					}
+				}else{
+					pare = SvgItem.text();
+				}
+				SvgItem.clear();
+				SvgItem.plain(pare);
 			}
 		}
 	});	
@@ -211,7 +228,14 @@ svgChange = {
 			para = "点击修改";
 		}
 		getPanelChange(SvgItem,"text");
-		SvgItem.text(para);
+
+		var row = setTextRow(Number(SvgItem.attr("width")),SvgItem.attr("font-size"),para);
+    	SvgItem.clear();
+		SvgItem.text(function(add) {
+			for(var i = 0; i < row.length; i++){
+				add.tspan(row[i]).newLine();
+			}
+		});
 	},
 	textX : function(para){
 		var SvgItem = svgItem.param.rectSel;
@@ -245,7 +269,15 @@ svgChange = {
 	    if(isNumber(para)){
 	    	getPanelChange(SvgItem,"width");
 	    	SvgItem.attr("width",Number(mmtranslate(para,"y")).toFixed(2));
-	    	var row = setTextRow(Number(mmtranslate(para,"y")).toFixed(2),SvgItem.attr("font-size"),SvgItem.text());
+	    	var pare = "";
+	    	if($(SvgItem.node).find("tspan").length > 0){
+				for(var i =0;i<$(SvgItem.node).find("tspan").length;i++){
+					pare += $($(SvgItem.node).find("tspan")[i]).text();
+				}
+			}else{
+				pare =  SvgItem.text();
+			}
+	    	var row = setTextRow(Number(mmtranslate(para,"y")).toFixed(2),SvgItem.attr("font-size"),pare);
 	    	SvgItem.clear();
     		SvgItem.text(function(add) {
     			for(var i = 0; i < row.length; i++){

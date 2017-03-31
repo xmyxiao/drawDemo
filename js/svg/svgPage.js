@@ -511,7 +511,7 @@ function setTextRow(textWidth,textSize,textStr){
 			textNode.text("");
 		}
 		textStr = textStr.substr(1,textStr.length-1);
-		if(textStr.length == 0 && textNode.width() < textWidth){
+		if(textStr.length == 0 && textNode.width() <= textWidth){
 			textRow.push(textNode.text());
 			textNode.text("");
 		}
