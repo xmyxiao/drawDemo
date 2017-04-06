@@ -634,9 +634,21 @@ function pasteSelected(){
 			y : point.y,
 			className : obj.attr("class") || "",
 			fontSize: obj.attr("font-size") || "",
-			content : obj.text(),
 			name : "",
+			dy : returnDy(obj.attr("font-size")) || "8.66",
+			dateRow : obj.attr("data-row") || "false",
+			width : obj.attr("width") || "",
+			height : obj.attr("height") || "",
 			fontFamily : obj.attr("font-family") || "Helvetica, Arial, sans-serif"
+		}
+		if(obj.attr("data-row") == "true"){
+			var pare = "";
+			for(var i =0;i<$(obj.node).find("tspan").length;i++){
+				pare += $($(obj.node).find("tspan")[i]).text();
+			}
+			objParam.content = pare;
+		}else{
+			objParam.content = obj.text();
 		}
 		createText(objParam);
 	}

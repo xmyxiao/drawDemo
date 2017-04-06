@@ -101,8 +101,29 @@ function createRect(){
 //文本
 function createText(objParam){
 	if(objParam){
-		var text = svgItem.param.draw.plain(objParam.content);
+		if(objParam.dateRow==""){
+			objParam.dateRow = "false";
+		}
 		objParam.fontSize = objParam.fontSize || "8pt";
+		var textWandH = getTextWandh(objParam.fontSize,objParam.content);
+		if(objParam.width==""){
+			objParam.width = textWandH.width;
+		}
+	    if(objParam.height==""){
+			objParam.height = textWandH.height;
+		}
+	    //判断是否是多行文本
+		if(objParam.dateRow == "true"){
+			var row = setTextRow(Number(objParam.width).toFixed(2),objParam.fontSize,objParam.content);
+			var text = svgItem.param.draw.text(function(add) {
+    			for(var i = 0; i < row.length; i++){
+					add.tspan(row[i]).newLine();
+				}
+			});
+		}else{
+			var text = svgItem.param.draw.plain(objParam.content);
+		}
+		//写入属性
 		text.addClass(objParam.classname);
 		text.attr("x",objParam.x);
 	    text.attr("y",objParam.y);
@@ -111,20 +132,12 @@ function createText(objParam){
 	    if(objParam.name==""){
 			objParam.name = getSvgName(text.attr("id"));
 		}
-	    if(objParam.dateRow==""){
-			objParam.dateRow = "false";
-		}
-	    if(objParam.width==""){
-			objParam.width = textWandH.width;
-		}
-	    if(objParam.height==""){
-			objParam.height = textWandH.height;
-		}
-	    text.attr("date-row",objParam.dateRow);
+	    text.attr("data-row",objParam.dateRow);
 	    text.attr("width",objParam.width);
 		text.attr("height",objParam.height);
 	    text.attr("name",objParam.name);
 	    text.attr("font-family",objParam.fontFamily);
+	    //绑定事件
 	    textOnEvent(text);
 	}else{
 		$.messager.prompt("操作提示", "请输入文本内容", function (str) {
@@ -135,7 +148,7 @@ function createText(objParam){
 			    text.attr('font-size',"8pt");
 			    text.attr("dy","8.66");
 			    text.attr("font-family","宋体");
-			    text.attr("date-row","false");
+			    text.attr("data-row","false");
 			    var textWandH = getTextWandh("8pt",str);
 			    text.attr("width",textWandH.width);
 			    text.attr("height",textWandH.height);
@@ -286,7 +299,7 @@ function rebulidSvg(str){
 				content : obj.text(),
 				name : obj.attr("name") || getSvgName(obj.attr("id")),
 				dy : returnDy(obj.attr("font-size")) || "8.66",
-				dateRow : obj.attr("date-row") || "",
+				dateRow : obj.attr("data-row") || "false",
 				width : obj.attr("width") || "",
 				height : obj.attr("height") || "",
 				fontFamily : obj.attr("font-family") || "Helvetica, Arial, sans-serif"
