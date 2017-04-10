@@ -267,7 +267,7 @@ svgChange = {
 			para = SvgItem.attr("width");
 		}
 	    if(isNumber(para)){
-	    	getPanelChange(SvgItem,"width");
+	    	getPanelChange(SvgItem,"textWidth");
 	    	SvgItem.attr("width",Number(mmtranslate(para,"y")).toFixed(2));
 	    	var pare = "";
 	    	if($(SvgItem.node).find("tspan").length > 0){
@@ -294,7 +294,7 @@ svgChange = {
 			para = SvgItem.attr("height");
 		}
 	    if(isNumber(para)){
-	    	getPanelChange(SvgItem,"height");
+	    	getPanelChange(SvgItem,"textHeight");
 	    	SvgItem.attr("height",Number(mmtranslate(para,"y")).toFixed(2));
 	    }else{
 	    	$.messager.alert("提示","输入格式不正确！","info");
@@ -482,7 +482,17 @@ function showTextMsg(){
 	}
 	$("#text-content").val(text.text());
 	$("#text-name").val(text.attr("name"));
+	$("#text-row").val(text.attr("data-row"));
 	$("#text-family").val(text.attr("font-family"));
+	if($("#text-row").val() == "true"){
+		$("#text-width").val(pxtranslate(text.attr("width"),"x"));
+		$("#text-height").val(pxtranslate(text.attr("height"),"y"));
+		$("#text-panel .draginput-textWidth").removeClass("hidden");
+		$("#text-panel .draginput-textHeight").removeClass("hidden");
+	}else{
+		$("#text-panel .draginput-textWidth").addClass("hidden");
+		$("#text-panel .draginput-textHeight").addClass("hidden");
+	}
 	$("#svgSelect").val(text.attr("id"));
 }
 //图片消息显示

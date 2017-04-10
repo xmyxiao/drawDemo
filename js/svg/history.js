@@ -130,6 +130,47 @@ historyDo.unfn = {
 				changeItem.attr("x",Number(mmtranslate($("#text-x").val(),"x")).toFixed(2));
 				changeItem.attr("y",Number(mmtranslate($("#text-y").val(),"y")).toFixed(2));
 				changeItem.attr("dy",returnDy(item.value.oldval));
+			}else if(item.value.eleAttr == "data-row"){
+				if(item.value.oldval == "true"){
+					var row = setTextRow(Number(changeItem.attr("width")).toFixed(2),changeItem.attr("font-size"),changeItem.text());
+			    	changeItem.clear();
+		    		changeItem.text(function(add) {
+		    			for(var i = 0; i < row.length; i++){
+							add.tspan(row[i]).newLine();
+						}
+					});
+				}else{
+					var pare = "";
+					if($(changeItem.node).find("tspan").length > 0){
+						for(var i =0;i<$(changeItem.node).find("tspan").length;i++){
+							pare += $($(changeItem.node).find("tspan")[i]).text();
+						}
+					}else{
+						pare = changeItem.text();
+					}
+					changeItem.clear();
+					changeItem.plain(pare);
+				}
+				item.value.reval = changeItem.attr(item.value.eleAttr);
+				changeItem.attr(item.value.eleAttr,item.value.oldval);
+			}else if(item.value.eleAttr == "textWidth"){
+				item.value.reval = changeItem.attr("width");
+				changeItem.attr("width",Number(item.value.oldval).toFixed(2));
+		    	var pare = "";
+		    	if($(changeItem.node).find("tspan").length > 0){
+					for(var i =0;i<$(changeItem.node).find("tspan").length;i++){
+						pare += $($(changeItem.node).find("tspan")[i]).text();
+					}
+				}else{
+					pare =  changeItem.text();
+				}
+		    	var row = setTextRow(Number(item.value.oldval).toFixed(2),changeItem.attr("font-size"),pare);
+		    	changeItem.clear();
+	    		changeItem.text(function(add) {
+	    			for(var i = 0; i < row.length; i++){
+						add.tspan(row[i]).newLine();
+					}
+				});
 			}else{
 				item.value.reval = changeItem.attr(item.value.eleAttr);
 				changeItem.attr(item.value.eleAttr,item.value.oldval);
@@ -257,8 +298,9 @@ function getPanelChange(actItem,name){
 	}
 	if(name == "text"){
 		changeItem.value.oldval = actItem.text();
-	}
-	if(name == "imageContent"){
+	}if(name == "textWidth"){
+		changeItem.value.oldval = actItem.attr("width");
+	}if(name == "imageContent"){
 		changeItem.value.oldval = $(actItem.node).attr("imgdata");
 	}
 	historyDo.getfn.change(changeItem);
@@ -351,6 +393,45 @@ historyDo.refn = {
 				changeItem.attr("x",Number(mmtranslate($("#text-x").val(),"x")).toFixed(2));
 				changeItem.attr("y",Number(mmtranslate($("#text-y").val(),"y")).toFixed(2));
 				changeItem.attr("dy",returnDy(item.value.reval));
+			}else if(item.value.eleAttr == "data-row"){
+				if(item.value.reval == "true"){
+					var row = setTextRow(Number(changeItem.attr("width")).toFixed(2),changeItem.attr("font-size"),changeItem.text());
+			    	changeItem.clear();
+		    		changeItem.text(function(add) {
+		    			for(var i = 0; i < row.length; i++){
+							add.tspan(row[i]).newLine();
+						}
+					});
+				}else{
+					var pare = "";
+					if($(changeItem.node).find("tspan").length > 0){
+						for(var i =0;i<$(changeItem.node).find("tspan").length;i++){
+							pare += $($(changeItem.node).find("tspan")[i]).text();
+						}
+					}else{
+						pare = changeItem.text();
+					}
+					changeItem.clear();
+					changeItem.plain(pare);
+				}
+				changeItem.attr(item.value.eleAttr,item.value.reval);
+			}else if(item.value.eleAttr == "textWidth"){
+				changeItem.attr("width",Number(item.value.reval).toFixed(2));
+		    	var pare = "";
+		    	if($(changeItem.node).find("tspan").length > 0){
+					for(var i =0;i<$(changeItem.node).find("tspan").length;i++){
+						pare += $($(changeItem.node).find("tspan")[i]).text();
+					}
+				}else{
+					pare =  changeItem.text();
+				}
+		    	var row = setTextRow(Number(item.value.reval).toFixed(2),changeItem.attr("font-size"),pare);
+		    	changeItem.clear();
+	    		changeItem.text(function(add) {
+	    			for(var i = 0; i < row.length; i++){
+						add.tspan(row[i]).newLine();
+					}
+				});
 			}else{
 				changeItem.attr(item.value.eleAttr,item.value.reval);
 			}
