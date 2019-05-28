@@ -1,0 +1,137 @@
+{
+    "serverURL": "",
+    "customMap": {
+    	"googleUrl": "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}&s=Gali",
+    	"center": { "y": 26.023077866300007, "x": 119.26544332504271, "z": 2561.2458771991464, "heading": 0, "pitch": -60, "roll": 0 },
+    	"toolBar": [
+            { 
+            	"name": "标注", 
+            	"icon": "fa fa-map", 
+            	"type": "window", 
+				"windowOptions": {
+					"width": 250,
+					"height": 500
+				},
+				"style": "dark",
+            	"widget": "widgets/manageLayers/view.html" 
+            },
+            {
+                "name": "工具",
+                "icon": "fa fa-cubes",
+                "children": [
+                	{ 
+                		"name": "坐标定位", 
+                		"icon": "fa fa-map-pin", 
+                		"type": "divwindow", 
+						"windowOptions": {
+							"width": 260,
+							"height": 210
+						},
+						"windowClose":"closeCenterXY()",
+						"style": "dark",
+                		"widget": "widgets/centerXY/view.html" 
+                	},
+                    {
+                    	"name": "我的标记", 
+                    	"icon": "fa fa-edit", 
+                    	"type": "window", 
+						"windowOptions": {
+							"width": 300,
+							"height": 400
+						},
+						"style": "dark",
+                    	"widget": "widgets/addmarker/view.html" 
+                    }
+                ]
+            }
+        ],
+        "basemaps": [
+            
+        ],
+        "operationallayers": [
+        	{
+                "id": 20,
+                "name": "三维模型",
+                "type": "group"
+            },
+            {
+                "id": 2010,
+                "pid": 20,
+                "name": "gltf模型",
+                "type": "group"
+            },
+            {
+                "pid": 2010,
+                "type": "gltf",
+                "name": "电线塔",
+                "url": "data/gltf/tower/tower.glb",
+                "popup": "飞凤山电线塔",
+                "position": { "x": 119.26544332504271, "y": 26.023077866300007, "z": 35, "heading": 90 },
+                "center": { "y": 26.022077866300007, "x": 119.27644332504271, "z": 143.7, "heading": 287.2, "pitch": -10.8, "roll": 359.8 },
+            	"visible": true,
+                "flyTo": true
+            },
+            {
+                "pid": 2010,
+                "type": "gltf",
+                "name": "光伏电场",
+                "tooltip": "示例信息，这是一个光伏电场",
+                "url": "data/gltf/taiyang/taiyang.gltf",
+                "scale": 0.5,
+                "position": { "x": 117.219828, "y": 31.828175, "z": 36.2, "heading": -59 },
+                "center": { "y": 31.827257, "x": 117.220203, "z": 126.6, "heading": 344.2, "pitch": -35.7, "roll": 359.9 }
+            },
+            {
+                "id": 2030,
+                "pid": 20,
+                "name": "倾斜摄影",
+                "type": "group"
+            },
+            {
+                "id": 203012,
+                "pid": 2030,
+                "type": "3dtiles",
+                "name": "工业园区",
+                "url": "http://data.marsgis.cn/3dtiles/qx-xiuwen/tileset.json",                                     
+                "maximumScreenSpaceError": 2,
+                "maximumMemoryUsage": 8192,
+                "dynamicScreenSpaceError": true,
+                "cullWithChildrenBounds": false,
+                "luminanceAtZenith": 0.6, 
+                "offset": { "z": -1330 },
+                "center": { "y": 26.853667, "x": 106.707192, "z": 1723, "heading": 85.8, "pitch": -34.5, "roll": 0.2 },    
+                "visible": false,
+                "flyTo": false
+            },
+            {
+                "id": 203013,
+                "pid": 2030,
+                "type": "3dtiles",
+                "name": "3d测试",
+                "url": "data/3dtitle/Tileset/tileset.json",                                     
+                "maximumScreenSpaceError": 2,
+                "maximumMemoryUsage": 8192,
+                "dynamicScreenSpaceError": true,
+                "cullWithChildrenBounds": false,
+                "luminanceAtZenith": 0.6, 
+                "offset": { "z": 0 },
+                "center": { "y": 40.04, "x": 75.61, "z": 1723, "heading": 85.8, "pitch": -34.5, "roll": 0.2 },
+                "visible": false,
+                "flyTo": false
+            }
+            
+        ],
+        "markerData":[
+        	{
+        		"id": "20190529153913", 
+        		"name": "1", 
+        		"remark": ""
+        	},
+        	{
+        		"id": "20190529153914", 
+        		"name": "2", 
+        		"remark": ""
+        	}
+        ]
+    }
+}

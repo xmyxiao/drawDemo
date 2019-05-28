@@ -1,0 +1,42 @@
+<!-- 2019-4-19 21:27:17 | 版权所有 火星科技 http://marsgis.cn  【联系我们QQ：516584683，微信：marsgis】 -->
+<!DOCTYPE html>
+<html class="no-js css-menubar" lang="zh-cn">
+
+	<head>
+		<title>弹窗子页面</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
+
+		<meta name="renderer" content="webkit">
+
+		<meta name="mobile-web-app-capable" content="yes">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+
+		<meta name="msapplication-TileColor" content="#62a8ea">
+		<script src="../../lib/include-lib.js" libpath="../../lib/" include="jquery,jquery.mCustomScrollbar,ztree,font-awesome,bootstrap,jquery.range"></script>
+		<link href="../../css/widget-win.css" rel="stylesheet">
+		<link href="view.css" rel="stylesheet">
+	</head>
+
+	<body>
+		<div id="view" style="width:100%;height:calc(100% - 40px);overflow:auto">
+			<ul id="treeOverlays" class="ztree"></ul>
+		</div>
+		<div style="position:absolute;bottom:0;padding:5px;color:#a59d9d">提示：双击可定位视域至其所在位置</div>
+		<div id="content_layer_manager_rMenu" class="layersctl_rMenu">
+			<ul>
+				<li data-type="top">图层置为顶层</li>
+				<li data-type="up">图层上移一层</li>
+				<li data-type="down">图层下移一层</li>
+				<li data-type="bottom">图层置为底层</li>
+			</ul>
+		</div>
+		<script src="widget.js"></script>
+		<script src="view.js"></script>
+	</body>
+
+</html>
