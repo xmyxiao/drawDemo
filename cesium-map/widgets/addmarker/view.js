@@ -1,7 +1,7 @@
 var thisWidget, $table;
 
 function getHeight() {
-	return $(window).height() - 40
+	return $(window.parent).height() - 40
 }
 
 function initWidgetView(t) {
@@ -43,11 +43,51 @@ function initWidgetView(t) {
 		onClickRow: function(t, e, i) {
 			thisWidget.centerAt(t.id)
 		}
-	}), $(window).resize(function() {
+	}), $(window.parent).resize(function() {
 		$table.bootstrapTable("refreshOptions", {
 			height: getHeight()
 		})
 	}), refMarkerList()
+	showMapListMark();
+	
+}
+
+function showMapListMark(){
+	var data = thisWidget.getMarkData();
+	var viewer = parent.viewer
+	var Cesium = parent.Cesium
+	var logoUrl = './widgets/addmarker/img/marker.png';
+	for(var i = 0, l = data.length; i < l; i++){
+		if(data[i].center){
+			if(!viewer.entities.getById(data[i].id)){
+				viewer.entities.add({
+					id : data[i].id,
+					name : data[i].name,
+			        position : Cesium.Cartesian3.fromDegrees(data[i].center.x, data[i].center.y),
+			        billboard : {
+			            image : logoUrl,
+			            scale : 0.8
+			        },
+				 	label : {
+					    text : data[i].name,
+					    font : '14pt monospace',
+					    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+					    outlineWidth : 2,
+					    //垂直位置
+					    verticalOrigin : Cesium.VerticalOrigin.BUTTON,
+					    //中心位置
+					    pixelOffset : new Cesium.Cartesian2(0, -25)
+				  	}
+			    });
+		   	}
+		}
+	}
+	var center = {
+		x: data[0].center.x || parent.customMap.config.customMap.center.x,
+		y: data[0].center.y || parent.customMap.config.customMap.center.y,
+		z: 10000000
+	}
+	thisWidget.centerAt({center})
 }
 
 function refMarkerList() {

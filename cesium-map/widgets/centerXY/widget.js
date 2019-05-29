@@ -13,8 +13,12 @@ $(function(){
 					z: Number(t)
 				}
 			};
+		centerUpdateMarker(config.center);
+		if(config.center.z < 1){
+			config.center.z = 100;
+		}
 		customMap.widget.centerAt(config);
-		centerUpdateMarker(config.center)
+		
 	})
 	
 	if(customMap && customMap.tools && customMap.tools.getCurrentExtent){
@@ -46,7 +50,7 @@ $(function(){
 })
 // 更新坐标定位图标位置
 function centerUpdateMarker(e) {
-	var t = Cesium.Cartesian3.fromDegrees(e.x, e.y, 0 || 0);
+	var t = Cesium.Cartesian3.fromDegrees(e.x, e.y, e.z || 0);
 	null == markerXY ? markerXY = viewer.entities.add({
 		name: "坐标拾取",
 		position: t,

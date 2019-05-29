@@ -96,73 +96,52 @@ function createMapviewer(){
 	    viewer.scene.camera.flyTo(homeCameraView);
 	});
 	initToolBar();
+	// 鼠标事件
 	var handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
-	// todo：在显示地形情况下点击创建点
-	handler.setInputAction(function (event) {
-	    if (!Cesium.Entity.supportsPolylinesOnTerrain(viewer.scene)) {
-	        console.log('当前浏览器不支持地形图');
-	        return;
-	    }
-	    var earthPosition = viewer.scene.pickPosition(event.position); //获取到地形图上面的坐标
-	    if (Cesium.defined(earthPosition)) {
-	        createPoint(earthPosition); //调用创建点的方法
-	    }
-	}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-	
-	// todo：在椭球下点击创建点
-	handler.setInputAction(function (event) {
-	    var earthPosition = viewer.camera.pickEllipsoid(event.position, viewer.scene.globe.ellipsoid); //返回在椭球上面的点的坐标
-	    if (Cesium.defined(earthPosition)) {
-	        createPoint(earthPosition); //在点击位置添加一个点
-	    }
-	}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-	
-	// todo：拾取模型表面的位置
-	handler.setInputAction(function (evt) {
-	    var scene = viewer.scene;
-	    var pickedObject = scene.pick(evt.position); //判断是否拾取到模型
-	    if (scene.pickPositionSupported && Cesium.defined(pickedObject)) {
-	        var cartesian = viewer.scene.pickPosition(evt.position);
-	        if (Cesium.defined(cartesian)) {
-	            var cartographic = Cesium.Cartographic.fromCartesian(cartesian); //根据笛卡尔坐标获取到弧度
-	            var lng = Cesium.Math.toDegrees(cartographic.longitude); //根据弧度获取到经度
-	            var lat = Cesium.Math.toDegrees(cartographic.latitude); //根据弧度获取到纬度
-	            var height = cartographic.height;//模型高度
-	            annotate(cartesian, lng, lat, height);
+	function pickAndTrackObject(e) {
+    //双击操作
+    var entity=pickEntity(viewer,e.position);
+	     if(entity){
+	         //将笛卡尔直角坐标系转化为经纬度坐标系
+	         var wgs84=viewer.scene.globe.ellipsoid.cartesianToCartographic(entity.position._value);
+	         //转化为经纬度
+	         var long=Cesium.Math.toDegrees(wgs84.longitude);
+	         var lat=Cesium.Math.toDegrees(wgs84.latitude);
+	         viewer.scene.camera.flyTo( {
+	             destination : Cesium.Cartesian3.fromDegrees(long, lat, 2000 ),//使用WGS84
+	             orientation : {
+	                 heading : Cesium.Math.toRadians( 0 ),
+	                 pitch : Cesium.Math.toRadians( -90 ),
+	                 roll : Cesium.Math.toRadians( 0 )
+	             },
+	             duration : 3,//动画持续时间
+	             complete : function()//飞行完毕后执行的动作
+	             {
+	                 // addEntities();
+	                 canCont=true;
+	             },
+	             pitchAdjustHeight: -90, // 如果摄像机飞越高于该值，则调整俯仰俯仰的俯仰角度，并将地球保持在视口中。
+	             maximumHeight:5000 // 相机最大飞行高度
+	         } );
+	     }
+	}
+	function pickAndSelectObject(e) {
+	    //单击操作
+	    //viewer.selectedEntity= pickEntity(viewer,e.position)
+	}
+	//拾取实体
+	function pickEntity(viewer,position) {
+	    var picked=viewer.scene.pick(position);
+	    if(picked){
+	        var id=Cesium.defaultValue(picked.id,picked.primitive.id);
+	        if(id instanceof Cesium.Entity){
+	            return id;
 	        }
 	    }
-	}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-	
-	var annotations = viewer.scene.primitives.add(new Cesium.LabelCollection());
-	
-	// 信息提示框
-	function annotate(cartesian, lng, lat, height) {
-	    createPoint(cartesian);
-	    annotations.add({
-	        position: cartesian,
-	        text:
-	            'Lon: ' + lng.toFixed(5) + '\u00B0' +
-	            '\nLat: ' + lat.toFixed(5) + '\u00B0' +
-	            "\nheight: " + height.toFixed(2) + "m",
-	        showBackground: true,
-	        font: '14px monospace',
-	        horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
-	        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-	        disableDepthTestDistance: Number.POSITIVE_INFINITY
-	    });
+	    return undefined;
 	}
-	
-	// 添加点
-	function createPoint(worldPosition) {
-	    var point = viewer.entities.add({
-	        position: worldPosition,
-	        point: {
-	            color: Cesium.Color.WHITE,
-	            pixelSize: 5
-	        }
-	    });
-	    return point;
-	}
+	viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(pickAndSelectObject,Cesium.ScreenSpaceEventType.LEFT_CLICK);
+	viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(pickAndTrackObject,Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK); 
 }
 // 创建工具栏
 function initToolBar(){
