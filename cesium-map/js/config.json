@@ -50,6 +50,12 @@
         ],
         "operationallayers": [
         	{
+                "id": 10,
+                "name": "我的标记",
+                "type": "mapMark",
+                "visible": true
+            },
+        	{
                 "id": 20,
                 "name": "三维模型",
                 "type": "group"
@@ -66,10 +72,10 @@
                 "name": "电线塔",
                 "url": "data/gltf/tower/tower.glb",
                 "popup": "飞凤山电线塔",
-                "position": { "x": 119.26544332504271, "y": 26.023077866300007, "z": 35, "heading": 90 },
-                "center": { "y": 26.022077866300007, "x": 119.27644332504271, "z": 143.7, "heading": 287.2, "pitch": -10.8, "roll": 359.8 },
-            	"visible": true,
-                "flyTo": true
+                "position": { "x": 119.2814, "y": 26.0219, "z": 243.7, "heading": 287.2, "pitch": -10.8, "roll": 359.8 },
+                "center": { "y": 26.0230, "x": 119.2658, "z": 143.7, "heading": 287.2, "pitch": -10.8, "roll": 359.8 },
+            	"visible": false,
+                "flyTo": false
             },
             {
                 "pid": 2010,
@@ -78,8 +84,8 @@
                 "tooltip": "示例信息，这是一个光伏电场",
                 "url": "data/gltf/taiyang/taiyang.gltf",
                 "scale": 0.5,
-                "position": { "x": 117.219828, "y": 31.828175, "z": 36.2, "heading": -59 },
-                "center": { "y": 31.827257, "x": 117.220203, "z": 126.6, "heading": 344.2, "pitch": -35.7, "roll": 359.9 }
+                "position": { "x": 117.2204, "y": 31.8271, "z": 136.2, "heading": 344.2, "pitch": -35.7, "roll": 359.9 },
+                "center": { "y": 31.8286, "x": 117.2198, "z": 126.6, "heading": 344.2, "pitch": -35.7, "roll": 359.9 }
             },
             {
                 "id": 2030,
@@ -88,36 +94,21 @@
                 "type": "group"
             },
             {
-                "id": 203012,
+                "id": 203014,
                 "pid": 2030,
                 "type": "3dtiles",
-                "name": "工业园区",
-                "url": "http://data.marsgis.cn/3dtiles/qx-xiuwen/tileset.json",                                     
+                "name": "新园区",
+                "url": "data/3dtitle/Gjs/tileset.json",                                     
                 "maximumScreenSpaceError": 2,
                 "maximumMemoryUsage": 8192,
                 "dynamicScreenSpaceError": true,
                 "cullWithChildrenBounds": false,
                 "luminanceAtZenith": 0.6, 
-                "offset": { "z": -1330 },
-                "center": { "y": 26.853667, "x": 106.707192, "z": 1723, "heading": 85.8, "pitch": -34.5, "roll": 0.2 },    
-                "visible": false,
-                "flyTo": false
-            },
-            {
-                "id": 203013,
-                "pid": 2030,
-                "type": "3dtiles",
-                "name": "3d测试",
-                "url": "data/3dtitle/Tileset/tileset.json",                                     
-                "maximumScreenSpaceError": 2,
-                "maximumMemoryUsage": 8192,
-                "dynamicScreenSpaceError": true,
-                "cullWithChildrenBounds": false,
-                "luminanceAtZenith": 0.6, 
-                "offset": { "z": 0 },
-                "center": { "y": 40.04, "x": 75.61, "z": 1723, "heading": 85.8, "pitch": -34.5, "roll": 0.2 },
-                "visible": false,
-                "flyTo": false
+                "offset": { "z": 1, "x": 525, "y": 250},
+                "position": { "y": 26.0445, "x": 119.1991, "z": 500, "heading": 119.22027407825902, "pitch": -34.5, "roll": 0.2 },    
+                "center": { "y": 26.037531839290523, "x": 119.21113231923478, "z": -0.0030133947920302014, "heading": 119.22027407825902, "pitch": -34.5, "roll": 0.2 },    
+                "visible": true,
+                "flyTo": true
             }
             
         ],

@@ -23,8 +23,8 @@ $(function(){
 	
 	if(customMap && customMap.tools && customMap.tools.getCurrentExtent){
 		var point = {
-			x: customMap.tools.getCurrentExtent().xcenter,
-			y: customMap.tools.getCurrentExtent().ycenter,
+			x: customMap.tools.getCurrentExtent().xcenter || customMap.config.customMap.center.x,
+			y: customMap.tools.getCurrentExtent().ycenter || customMap.config.customMap.center.y,
 			z: customMap.tools.getCurrentExtent().height
 		};
 		centerShowLatlng(point);

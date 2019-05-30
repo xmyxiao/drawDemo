@@ -276,11 +276,11 @@
 		},
 		// 视图焦点
 		centerAt: function(config){
-			if(!config.center){
+			if(!config.center && !config.position){
 				return
 			}
 			
-			var center = config.center;
+			var center = config.position || config.center;
 			// Cesium.Cartesian3.fromDegrees(longitude, latitude, height, ellipsoid, result)
 			var initialPosition = new Cesium.Cartesian3.fromDegrees(center.x, center.y, center.z);
 			// 创建摄像机位置
@@ -304,10 +304,10 @@
 		},
 		// 添加gltf模型
 		addGltfLayer: function(config){
-			if(!config.position){
+			if(!config.center){
 				return
 			}
-			var viewPosition = config.position;
+			var viewPosition = config.center;
 			var position = Cesium.Cartesian3.fromDegrees(viewPosition.x,viewPosition.y);
 			var hpRoll = new Cesium.HeadingPitchRoll(config.hpRoll);
 			var fixedFrameTransforms = Cesium.Transforms.localFrameToFixedFrameGenerator('north','west');
@@ -333,17 +333,69 @@
 			
 			viewer.scene.primitives.add(tileset);
 			
-			tileset.readyPromise.then(function(tileset) {
-			    var cartographic = Cesium.Cartographic.fromCartesian(tileset.boundingSphere.center);
-			    var surface = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 0.0);
-			    var offset = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, height);
-			    var translation = Cesium.Cartesian3.subtract(offset, surface, new Cesium.Cartesian3());
-			    tileset.modelMatrix = Cesium.Matrix4.fromTranslation(translation);
+			tileset.readyPromise.then(function(tileset) {			    
+			   	var position = Cesium.Cartesian3.fromDegrees(config.center.x, config.center.y, config.center.z);
+			    var mat = Cesium.Transforms.eastNorthUpToFixedFrame(position);
+			    
+			    var rotationX = Cesium.Matrix4.fromRotationTranslation(Cesium.Matrix3.fromRotationZ(Cesium.Math.toRadians(config.center.heading)));
+			    Cesium.Matrix4.multiply(mat, rotationX, mat);
+			    var tranConfig = {
+			    	x: config.offset.x || 1,
+			    	y: config.offset.y || 1,
+			    	z: config.offset.z || 1
+			    }
+			    var translation=Cesium.Cartesian3.fromArray([tranConfig.x, tranConfig.y, tranConfig.z]);
+				var m = Cesium.Matrix4.fromTranslation(translation);
+				Cesium.Matrix4.multiply(mat, m, mat);
+			    tileset._root.transform = mat;			    
 			}).otherwise(function(error) {
 			    console.log(error);
 			});
 			tileset.show = config.visible || false;
 			return tileset
+		},
+		// 添加标记实体
+		addMapMarkLayer: function(config){
+			var data = this.getMarkData();
+			var logoUrl = './widgets/addmarker/img/marker.png';
+			for(var i = 0, l = data.length; i < l; i++){
+				if(data[i].center){
+					if(!viewer.entities.getById(data[i].id)){
+						viewer.entities.add({
+							id : data[i].id,
+							name : data[i].name,
+					        position : Cesium.Cartesian3.fromDegrees(data[i].center.x, data[i].center.y),
+					        billboard : {
+					            image : logoUrl,
+					            scale : 0.8
+					        },
+						 	label : {
+							    text : data[i].name,
+							    font : '14pt monospace',
+							    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+							    outlineWidth : 2,
+							    //垂直位置
+							    verticalOrigin : Cesium.VerticalOrigin.BUTTON,
+							    //中心位置
+							    pixelOffset : new Cesium.Cartesian2(0, -25)
+						  	}
+					   	});
+					}else{
+						var entitie = viewer.entities.getById(data[i].id);
+						entitie.show = true;
+					}
+				}
+			}
+		},
+		// 隐藏标记实体
+		hideMapMarkLayer: function(){
+			var data = this.getMarkData();
+			for(var i = 0, l = data.length; i < l; i++){
+				if(data[i].center && viewer.entities.getById(data[i].id)){
+					var entitie = viewer.entities.getById(data[i].id);
+					entitie.show = false;
+				}
+			}
 		},
 		// 获取标记信息
 		getMarkData: function(){

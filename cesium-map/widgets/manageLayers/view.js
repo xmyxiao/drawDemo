@@ -59,18 +59,25 @@ function removeNode(e) {
 
 function treeOverlays_onCheck(e, t, r) {
 	for(var n = $.fn.zTree.getZTreeObj(t), a = n.getChangeCheckedNodes(), i = 0; i < a.length; i++) {
-		var item = a[i],itemLayer = layersObj[r._key];
-		r.checkedOld = r.checked
+		var item = a[i],itemLayer = layersObj[item._key];
+		item.checkedOld = item.checked
 		if(null != itemLayer){
-			if(!itemLayer._layer){
+			if(!itemLayer._layer && item._type === 'gltf'){
 				itemLayer._layer = thisWidget.addGltfLayer(itemLayer);
-				layersObj[r._key] = itemLayer;
+				layersObj[item._key] = itemLayer;
 			}
 			if(itemLayer._layer){
-				itemLayer._layer.show = r.checked;
+				itemLayer._layer.show = item.checked;
 			}
-			itemLayer.visible = r.checked;
-			if(r.checked){
+			if(item._type === 'mapMark'){
+				if(item.checked){
+					thisWidget.addMapMarkLayer(item);
+				}else{
+					thisWidget.hideMapMarkLayer();
+				}
+			}
+			itemLayer.visible = item.checked;
+			if(item.checked){
 				thisWidget.centerAt(itemLayer);
 			}
 		}

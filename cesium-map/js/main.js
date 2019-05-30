@@ -43,6 +43,10 @@ function initMapData(){
 			    	item._layer = customMap.widget.add3DtilesLayer(item);
 			    	operationallayers[i] = item;
 			        break;
+			    case 'mapMark':
+			    	item._layer = customMap.widget.addMapMarkLayer(item);
+			    	operationallayers[i] = item;
+			        break;
 			    default:
 			       	item._layer = ''
 			}
