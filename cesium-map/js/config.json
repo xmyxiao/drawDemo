@@ -2,7 +2,7 @@
     "serverURL": "",
     "customMap": {
     	"googleUrl": "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}&s=Gali",
-    	"center": { "y": 26.023077866300007, "x": 119.26544332504271, "z": 2561.2458771991464, "heading": 0, "pitch": -60, "roll": 0 },
+    	"center": { "y": 26.023077866300007, "x": 119.26544332504271, "z": 10612432, "heading": 0, "pitch": -90, "roll": 0 },
     	"toolBar": [
             { 
             	"name": "标注", 

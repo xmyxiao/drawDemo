@@ -62,6 +62,18 @@
 			}
 			return !0
 		},
+		getCenterPosition: function() {
+	        var result = viewer.camera.pickEllipsoid(new Cesium.Cartesian2(viewer.canvas.clientWidth / 2, viewer.canvas.clientHeight / 2));
+	        var curPosition = Cesium.Ellipsoid.WGS84.cartesianToCartographic(result);
+	        var lon = curPosition.longitude * 180 / Math.PI;
+	        var lat = curPosition.latitude * 180 / Math.PI;
+	        var height = CesMap.getHeight();
+	        return {
+	            x: lon,
+	            y: lat,
+	            z: height
+	        };
+	   },
 		// 获取当前三维范围
 		getCurrentExtent: function() {
 		    // 范围对象
@@ -315,7 +327,7 @@
 			var carPrimitive = scene.primitives.add(Cesium.Model.fromGltf({
 				url : config.url,
 				modelMatrix: Cesium.Transforms.headingPitchRollToFixedFrame(position,hpRoll,Cesium.Ellipsoid.WGS84,fixedFrameTransforms),
-				minimumPixelSize:128,
+				minimumPixelSize:1,
 				scale : config.scale || 1.0
 			}));
 			carPrimitive.show = config.visible || false;
@@ -333,7 +345,7 @@
 			
 			viewer.scene.primitives.add(tileset);
 			
-			tileset.readyPromise.then(function(tileset) {			    
+			tileset.readyPromise.then(function(tileset) {
 			   	var position = Cesium.Cartesian3.fromDegrees(config.center.x, config.center.y, config.center.z);
 			    var mat = Cesium.Transforms.eastNorthUpToFixedFrame(position);
 			    
@@ -364,6 +376,7 @@
 						viewer.entities.add({
 							id : data[i].id,
 							name : data[i].name,
+							//show: false,
 					        position : Cesium.Cartesian3.fromDegrees(data[i].center.x, data[i].center.y),
 					        billboard : {
 					            image : logoUrl,
@@ -379,7 +392,7 @@
 							    //中心位置
 							    pixelOffset : new Cesium.Cartesian2(0, -25)
 						  	}
-					   	});
+					   });
 					}else{
 						var entitie = viewer.entities.getById(data[i].id);
 						entitie.show = true;
@@ -400,7 +413,156 @@
 		// 获取标记信息
 		getMarkData: function(){
 			return customMap.config.customMap.markerData || []
+		},
+		pickAndSelectObject: function (e) {
+		    //单击操作
+		    var selectObj = customMap.widget.pickEntity(viewer,e.position);
+		    if(selectObj && selectObj.type === '3dtitle'){
+		    	var data = customMap.config.customMap.operationallayers;
+				for(var i = 0, l = data.length; i < l; i++){
+					if(data[i].url === selectObj.id){
+						customMap.widget.show3DtitleDialog(data[i],e)
+					}
+				}
+		    }
+		    //viewer.selectedEntity = pickEntity(viewer,e.position);
+		},
+		//拾取实体
+		pickEntity: function(viewer,position) {
+			var scene = viewer.scene;
+		    var picked = viewer.scene.pick(position);
+		    if(picked){
+		    	var featureName = '';
+		    	if(picked.getProperty){
+		    		var selectedEntity = new Cesium.Entity();
+		    		featureName = picked.getProperty('name') || '';
+		    		selectedEntity.name = featureName;
+		    		var pick3d= new Cesium.Cartesian2(position.x,position.y);
+					var cartesian = scene.globe.pick(viewer.camera.getPickRay(pick3d), scene)
+					selectedEntity.cartesian = cartesian;
+					if(featureName && picked._content._tileset.url){
+						selectedEntity.url = picked._content._tileset.url;
+					}
+		    		if(!customMap.selectedEntitys){
+		    			customMap.selected3dEntitys = [];
+		    		}
+		    		customMap.selected3dEntitys.push(selectedEntity);
+		    	}
+		        var id = Cesium.defaultValue(picked.id,picked.primitive.id);
+		        if(id instanceof Cesium.Entity){ // 实体id
+		            return {id: id, type: 'entity'};
+		        }else if(featureName && picked._content._tileset.url){// 3dtitle url
+		        	return {id: picked._content._tileset.url, type: '3dtitle'};
+		        }
+		    }
+		    return undefined;
+		},
+		pickAndTrackObject: function(e) {
+	    	//双击操作
+	    	var entity = customMap.widget.pickEntity(viewer,e.position).id;
+		    if(entity){
+		        //将笛卡尔直角坐标系转化为经纬度坐标系
+		        var wgs84 = viewer.scene.globe.ellipsoid.cartesianToCartographic(entity.position._value);
+		        //转化为经纬度
+		        var long = Cesium.Math.toDegrees(wgs84.longitude);
+		        var lat = Cesium.Math.toDegrees(wgs84.latitude);
+		        viewer.scene.camera.flyTo( {
+		            destination : Cesium.Cartesian3.fromDegrees(long, lat, 2000 ),//使用WGS84
+		            orientation : {
+		                heading : Cesium.Math.toRadians( 0 ),
+		                pitch : Cesium.Math.toRadians( -90 ),
+		                roll : Cesium.Math.toRadians( 0 )
+		            },
+		            duration : 3,//动画持续时间
+		            complete : function()//飞行完毕后执行的动作
+		            {
+		                // addEntities();
+		                canCont=true;
+		            },
+		            pitchAdjustHeight: -90, // 如果摄像机飞越高于该值，则调整俯仰俯仰的俯仰角度，并将地球保持在视口中。
+		            maximumHeight:5000 // 相机最大飞行高度
+		        } );
+		    }
+		},
+		show3DtitleDialog: function(item,e){
+			var html = $('#popup_'+item.id+'');
+			if(html.length < 1){
+				var infoDiv = this.get3DtitleDialogHtml(item);
+				$('#pupup-all-view').append(infoDiv);
+				this.positionPopUp(item,e);
+			}else{
+				html.show();
+				this.positionPopUp(item,e);
+			}
+		},
+		get3DtitleDialogHtml: function(item) {
+			var html = 
+			'<div id="popup_'+item.id+'" class="cesium-popup">'+
+				'<a class="cesium-popup-close-button cesium-popup-color" href="javascript:customMap.widget.closeDialog('+item.id+')">×</a>'+           
+				'<div class="cesium-popup-content-wrapper cesium-popup-background">'+
+					'<div class="cesium-popup-content cesium-popup-color">'+
+						'<div class="addmarker-popup-titile">位置详细</div>'+
+						'<div class="addmarker-popup-content">'+
+							'<form>'+
+							'<div class="form-group">'+
+								'<label for="addmarker_attr_name">公司名称：</label>'+
+								'<span>福州中海创科技</span>'+
+							'</div>'+
+							'<div class="form-group">'+
+								'<label for="addmarker_attr_name">详细地址：</label>'+
+								'<span>创新园二期18号楼20层2002室</span>'+
+							'</div>'+
+							'<div class="form-group" style="text-align: center;">'+
+								'<input type="button" class="btn btn-primary  btn-sm" value="访问" onclick="customMap.widget.openLayer('+item.id+')">'+
+								'&nbsp;&nbsp;<input type="button" class="btn btn-primary  btn-sm" value="关闭" onclick="customMap.widget.closeDialog('+item.id+')">'+
+							'</div>'+
+							'</form>'+
+						'</div>'+
+					'</div>'+     
+				'</div>'+      
+				'<div class="cesium-popup-tip-container">'+
+					'<div class="cesium-popup-tip cesium-popup-background"></div>'+
+				'</div>'+
+			'</div>';
+			return html
+		},
+		// 更新弹框位置
+		positionPopUp: function(config,e) {
+			var html = $('#popup_'+config.id+'');
+			if(html.length < 1){
+				return;
+			}
+			var x = e.position.x - (html.width()) / 2;
+			var y = e.position.y - (html.height());
+			html.css('transform', 'translate3d(' + x + 'px, ' + y + 'px, 0)');
+		},
+		// 关闭弹框
+		closeDialog: function(id){
+			var html = $('#popup_'+id+'');
+			if(html.length > 0){
+				html.hide();
+			}
+		},
+		// 打开新的页面
+		openLayer: function(id){
+			var url = 'http://design.gkiiot.com/index/user/login.html';
+			var center = {
+				x: window.innerWidth - 200,
+				y: window.innerHeight - 200,
+			}
+			if(center.x < 800){center.x = 800}
+			if(center.y < 600){center.y = 600}
+			layer.open({
+		    	type: 2,
+		      	title: '海创物联',
+		      	skin: "layer-mars-dialog animation-scale-up",
+		      	shadeClose: true,
+		      	shade: false,
+		      	maxmin: true, //开启最大化最小化按钮
+		      	area: [center.x + 'px', center.y + 'px'],
+		      	content: url
+		    });
 		}
-	}
+	};
 	window.customMap = customMap;
 })( window );
