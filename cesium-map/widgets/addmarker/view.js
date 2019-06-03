@@ -8,7 +8,7 @@ function initWidgetView(t) {
 	(thisWidget = t).config && thisWidget.config.style && $("body").addClass(thisWidget.config.style), plotFile.initEvent(), $("#btn_marker_Add").bind("click", function() {
 		thisWidget.drawPoint()
 	}), $("#btn_plot_delall").click(function() {
-		thisWidget.deleteAll(), refMarkerList()
+		thisWidget.deleteMarkerItem(), refMarkerList()
 	});
 	widgetTool = initWidgetTool();
 	var e = !0;
@@ -33,7 +33,8 @@ function initWidgetView(t) {
 			width: 50,
 			events: {
 				"click .remove": function(t, e, i, l) {
-					thisWidget.deleteEditFeature(i.id)
+					thisWidget.deleteMarkerItem(i.id)
+					refMarkerList();
 				}
 			},
 			formatter: function(t, e, i) {
@@ -41,7 +42,15 @@ function initWidgetView(t) {
 			}
 		}],
 		onClickRow: function(t, e, i) {
-			thisWidget.centerAt(t.id)
+			if('operate' === i){
+				return;
+			}
+			for(var i = 0, l = thisWidget.getMarkData().length; i < l; i++){
+				var item = thisWidget.getMarkData()[i];
+				if(item.id === t.id){
+					thisWidget.centerAt(item)
+				}
+			}
 		}
 	}), $(window.parent).resize(function() {
 		$table.bootstrapTable("refreshOptions", {
@@ -54,6 +63,9 @@ function initWidgetView(t) {
 
 function showMapListMark(){
 	var data = thisWidget.getMarkData();
+	if(data.length < 1){
+		return;
+	}
 	thisWidget.addMapMarkLayer();
 	var center = {
 		x: data[0].center.x || parent.customMap.config.customMap.center.x,

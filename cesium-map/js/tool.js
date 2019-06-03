@@ -296,7 +296,7 @@
 			
 			var center = config.position || config.center;
 			// Cesium.Cartesian3.fromDegrees(longitude, latitude, height, ellipsoid, result)
-			var initialPosition = new Cesium.Cartesian3.fromDegrees(center.x, center.y, center.z);
+			var initialPosition = new Cesium.Cartesian3.fromDegrees(center.x, center.y, center.z || 200);
 			// 创建摄像机位置
 			var initialOrientation = new Cesium.HeadingPitchRoll.fromDegrees(center.heading || 0, center.pitch || -90, center.roll || 0);
 			var centerCameraView = {
@@ -378,7 +378,7 @@
 						viewer.entities.add({
 							id : data[i].id,
 							name : data[i].name,
-							//show: false,
+							show: false,
 					        position : Cesium.Cartesian3.fromDegrees(data[i].center.x, data[i].center.y),
 					        billboard : {
 					            image : logoUrl,
@@ -402,15 +402,45 @@
 				}
 			}
 		},
-		// 隐藏标记实体
-		hideMapMarkLayer: function(){
-			var data = this.getMarkData();
-			for(var i = 0, l = data.length; i < l; i++){
-				if(data[i].center && viewer.entities.getById(data[i].id)){
-					var entitie = viewer.entities.getById(data[i].id);
-					entitie.show = false;
+		// 隐藏所有标记实体
+		hideMapMarkLayer: function(id){
+			if(id){
+				var entitie = viewer.entities.getById(id);
+				entitie.show = false;
+			}else{
+				var data = this.getMarkData();
+				for(var i = 0, l = data.length; i < l; i++){
+					if(data[i].center && viewer.entities.getById(data[i].id)){
+						var entitie = viewer.entities.getById(data[i].id);
+						entitie.show = false;
+					}
 				}
 			}
+		},
+		// 删除标记实体
+		deleteMarkerItem: function(id){
+			if(id){
+				var entitie = viewer.entities.getById(id);
+				viewer.entities.remove(entitie);
+				var data = this.getMarkData();
+				for(var i = 0, l = data.length; i < l; i++){
+					if(id === data[i].id){
+						data.splice(i, 1);
+						return;
+					}
+				}
+				console.log(data,this.getMarkData());
+			}else{
+				var data = this.getMarkData();
+				for(var i = 0, l = data.length; i < l; i++){
+					if(data[i].center && viewer.entities.getById(data[i].id)){
+						var entitie = viewer.entities.getById(data[i].id);
+						viewer.entities.remove(entitie);
+					}
+				}
+				customMap.config.customMap.markerData = [];
+			}
+			
 		},
 		// 获取标记信息
 		getMarkData: function(){

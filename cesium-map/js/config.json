@@ -2,7 +2,7 @@
     "serverURL": "",
     "customMap": {
     	"googleUrl": "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}&s=Gali",
-    	"center": { "y": 26.023077866300007, "x": 119.26544332504271, "z": 10612432, "heading": 0, "pitch": -90, "roll": 0 },
+    	"center": { "y": 26.022977866300007, "x": 119.26484332504271, "z": 2432, "heading": 0, "pitch": -30, "roll": 0 },
     	"toolBar": [
     		{
     			"name": "底图", 
@@ -74,24 +74,18 @@
             },
             {
                 "pid": 10,
-                "name": "天地图卫星",
-                "icon": "img/basemaps/tdt_img.png",
-                "type": "www_tdt",
-                "layer": "img_d",
-                "key": [
-                  "313cd4b28ed520472e8b43de00b2de56",
-                  "83b36ded6b43b9bc81fbf617c40b83b5",
-                  "0ebd57f93a114d146a954da4ecae1e67",
-                  "6c99c7793f41fccc4bd595b03711913e",
-                  "56b81006f361f6406d0e940d2f89a39c"
-                ]
+                "name": "ArcGIS卫星",
+                "icon": "img/basemaps/esriWorldImagery.png",
+                "type": "arcgis",
+                "url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+                "enablePickFeatures": false
             },
             {
                 "pid": 10,
                 "name": "离线地图",
                 "type": "xyz",
                 "icon": "img/basemaps/gaode_img.png",
-                "url": "./img/MAP/{z}/{x}/{y}.jpg"
+                "url": "./../img/MAP/{z}/{x}/{y}.png"
             }
         ],
         "operationallayers": [

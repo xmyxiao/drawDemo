@@ -20,16 +20,26 @@ function changeBaseMaps(a, e) {
 		$(this).removeClass("hover");
 	});
 	$(a).addClass("hover");
+	var layers = parent.viewer.scene.imageryLayers;
+	for(var i = 0, l = basemapsCfg.length; i < l; i++){
+		if(layers.get(i) && i != e){
+			layers.get(i).show = false;
+		}
+	}
+	
 	var item = basemapsCfg[e];
 	thisWidget.basemap = item.type;
-	
-	var layers = parent.viewer.scene.imageryLayers;
-	var blackMarble = layers.addImageryProvider(parent.Cesium.createTileMapServiceImageryProvider({
-	    url : 'http://t0.tianditu.com/vec_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=vec&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles',
-	    layer: "tdtVecBasicLayer",
-        style: "default",
-        format: "image/jpeg",
-        tileMatrixSetID: "GoogleMapsCompatible",
-        show: true
-	}));
+	if(layers.get(e)){
+		layers.get(e).show = true;
+	}else if(item.type === 'arcgis'){
+		var esriImageryProvider = new parent.Cesium.ArcGisMapServerImageryProvider({
+		    url : item.url
+		});
+		layers.addImageryProvider(esriImageryProvider,e);
+	}else if(item.type === 'xyz'){
+		var xyzImageryProvider = new parent.Cesium.UrlTemplateImageryProvider({
+		    url : item.url
+		});
+		layers.addImageryProvider(xyzImageryProvider,e);
+	}
 }
