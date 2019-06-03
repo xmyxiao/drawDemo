@@ -63,9 +63,22 @@ function createMapviewer(){
 		fullscreenButton : true,    //右下全屏
 		geocoder: false,            //地名查找控件
 		baseLayerPicker: false,     //图层选择控件
-		navigationHelpButton: false,//帮助按钮
-		imageryProvider: new Cesium.UrlTemplateImageryProvider({url: config.googleUrl})
+		navigationHelpButton: false//帮助按钮
+		//imageryProvider: new Cesium.UrlTemplateImageryProvider({url: config.googleUrl})
 	})
+	
+/*	var layers = viewer.scene.imageryLayers;
+var blackMarble = layers.addImageryProvider(Cesium.createTileMapServiceImageryProvider({
+    url : 'https://cesiumjs.org/tilesets/imagery/blackmarble',
+
+    flipXY : true
+}));*/
+var layers = viewer.scene.imageryLayers;
+var GoogleMap = new Cesium.UrlTemplateImageryProvider({
+    url:"http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}&s=Gali"
+    });
+    layers.addImageryProvider(GoogleMap,1);
+
 	// 底部logo
 	viewer.cesiumWidget.creditContainer.style.display = 'none';
 	

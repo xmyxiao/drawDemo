@@ -129,6 +129,8 @@
 		}
 	};
 	customMap.widget = {
+		// 默认底图
+		basemap : 'www_google',
 		// 点击事件
 		activate: function(item){
 			if(item.type && item.type === 'window'){
@@ -414,6 +416,10 @@
 		getMarkData: function(){
 			return customMap.config.customMap.markerData || []
 		},
+		// 获取底图信息
+		getBasemaps: function(){
+			return customMap.config.customMap.basemaps || []
+		},
 		pickAndSelectObject: function (e) {
 		    //单击操作
 		    var selectObj = customMap.widget.pickEntity(viewer,e.position);
@@ -545,7 +551,7 @@
 		},
 		// 打开新的页面
 		openLayer: function(id){
-			var url = 'http://design.gkiiot.com/index/user/login.html';
+			var url = 'http://design.gkiiot.com/';
 			var center = {
 				x: window.innerWidth - 200,
 				y: window.innerHeight - 200,

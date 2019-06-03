@@ -367,7 +367,7 @@ ul#loadbar li:first-child {
 .cesium-viewer-toolbar {
 	top: 12px;
     left: auto;
-    right: 205px;
+    right: 283px;
 }
 
 .cesium-navigationHelpButton-wrapper,
@@ -394,7 +394,7 @@ ul#loadbar li:first-child {
 .cesium-viewer-fullscreenContainer{
 	top: 14px;
     left: auto;
-    right: 175px;
+    right: 250px;
     bottom: auto;
 }
 
