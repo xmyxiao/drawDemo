@@ -3,10 +3,12 @@ function initWidgetTool(){
 
 	}
 	thisWidget.editMarkEntitie = true;
+	thisWidget.refMarkerList = refMarkerList;
 	return widgetTool;
 }
 
 // 关闭弹出框
-function closeMarkerDialog(){
+parent.closeMarkerDialog = function(){
 	thisWidget.editMarkEntitie = false;
+	thisWidget.refMarkerList = null
 }

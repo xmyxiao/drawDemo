@@ -6,10 +6,11 @@
 		<link rel="stylesheet" href="./Build/Cesium/Widgets/widgets.css" />
 		<link rel="stylesheet" href="./css/style.css" />
 		<link rel="stylesheet" href="./css/map.css" />
-		
+		<link rel="stylesheet" href="./css/dialog.css" />
 		<script src="./Build/Cesium/Cesium.js"></script>
 		<script src="./lib/include-lib.js" libpath="./lib/" include="jquery,layer,font-awesome,toolBarRight"></script>
 		<script src="./js/tool.js"></script>
+		<script src="./js/tool-mark.js"></script>
 		<script src="./js/main.js"></script>
 		<style>
 			html, body, #cesiumContainer{
@@ -24,6 +25,15 @@
 	<body class="dark">
 		<div id="cesiumContainer"></div>
 		<div class="toolBarRight animation-slide-top no-print-view"></div>
-		<div id="pupup-all-view" style="position: absolute;top:0;">
+		<div id="pupup-all-view" style="position: absolute;top:0;"></div>
+		<!--<div class="map-dialog cesium-popup">
+			<a class="cesium-popup-close-button cesium-popup-color" href="#">×</a>
+			<div class="map-dialog-title">
+				
+			</div>
+			<ul class="map-dialog-center">
+				
+			</ul>
+		</div>-->
 	</body>
 </html>

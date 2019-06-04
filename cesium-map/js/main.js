@@ -128,9 +128,9 @@ function createMapviewer(){
 			var entity3d = customMap.selected3dEntitys[i];
 			var data = customMap.config.customMap.operationallayers;
 			var item = '';
-			for(var i = 0, l = data.length; i < l; i++){
-				if(data[i].url === entity3d.url){
-					item = data[i];
+			for(var n = 0, m = data.length; n < m; n++){
+				if(data[n].url === entity3d.url){
+					item = data[n];
 				}
 			}
 			if(entity3d.cartesian){
@@ -156,9 +156,9 @@ function createMapviewer(){
 			if(!markEntity.show){
 				return;
 			}
-			for(var i = 0, l = data.length; i < l; i++){
-				if(data[i].id === markEntity._id){
-					item = data[i];
+			for(var n = 0, m = data.length; n < m; n++){
+				if(data[n].id === markEntity._id){
+					item = data[n];
 				}
 			}
 			if(markEntity._id && markEntity._position._value){
