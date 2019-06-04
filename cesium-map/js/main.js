@@ -57,6 +57,7 @@ function initMapData(){
 function createMapviewer(){
 	var config = customMap.config.customMap;
 	// 初始底图
+	Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzOTkyNmNiNC03NzY1LTRiZTctOTg3Ni1iMGZlNDE1NDE4NmUiLCJpZCI6MTE2OTgsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NTk2MDg4NzN9.VJGXxViAZcECkCEZQ94265haoehz7Ytfp6VZ_5XZD9c';
 	viewer = new Cesium.Viewer('cesiumContainer',{
 		animation: false,           //左下仪表 动画控件
 		timeline: false,            //时间轴
