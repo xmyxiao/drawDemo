@@ -6,10 +6,11 @@ function getHeight() {
 
 function initWidgetView(t) {
 	(thisWidget = t).config && thisWidget.config.style && $("body").addClass(thisWidget.config.style), plotFile.initEvent(), $("#btn_marker_Add").bind("click", function() {
-		thisWidget.drawPoint()
+		thisWidget.drawMarkPoint()
 	}), $("#btn_plot_delall").click(function() {
 		thisWidget.deleteMarkerItem(), refMarkerList()
 	});
+	
 	widgetTool = initWidgetTool();
 	var e = !0;
 	$("#btn_plot_isedit").click(function() {
@@ -106,3 +107,4 @@ var plotFile = {
 		window.addEventListener ? document.getElementById("input_plot_file").value = "" : document.getElementById("input_plot_file").outerHTML += ""
 	}
 };
+

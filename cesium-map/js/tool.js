@@ -78,20 +78,15 @@
 		getCurrentExtent: function() {
 		    // 范围对象
 		    var extent = {};
-		    
 		    // 得到当前三维场景
 		    var scene = viewer.scene;
-		    
 		    // 得到当前三维场景的椭球体
 		    var ellipsoid = scene.globe.ellipsoid;
 		    var canvas = scene.canvas;
-		    
 		    // canvas左上角
 		    var car3_lt = viewer.camera.pickEllipsoid(new Cesium.Cartesian2(0,0), ellipsoid);
-		    
 		    // canvas右下角
 		    var car3_rb = viewer.camera.pickEllipsoid(new Cesium.Cartesian2(canvas.width,canvas.height), ellipsoid);
-		    
 		    // 当canvas左上角和右下角全部在椭球体上
 		    if (car3_lt && car3_rb) {
 		        var carto_lt = ellipsoid.cartesianToCartographic(car3_lt);
@@ -131,6 +126,10 @@
 	customMap.widget = {
 		// 默认底图
 		basemap : 'www_google',
+		// 是否绘制标记实体
+		drawMarkFlag: false,
+		// 标记实体是否可编辑
+		editMarkEntitie: false,
 		// 点击事件
 		activate: function(item){
 			if(item.type && item.type === 'window'){
@@ -158,6 +157,9 @@
 				},
 				cancel: function(){
 					item.layerIdx = '';
+					if(item.windowClose){
+						eval(item.windowClose)
+					}
 				}
 			};
 			item.layerIdx = layer.open(this.getWinOpt(item, config));
@@ -296,7 +298,7 @@
 			
 			var center = config.position || config.center;
 			// Cesium.Cartesian3.fromDegrees(longitude, latitude, height, ellipsoid, result)
-			var initialPosition = new Cesium.Cartesian3.fromDegrees(center.x, center.y, center.z || 200);
+			var initialPosition = new Cesium.Cartesian3.fromDegrees(center.x, center.y, center.z || 2000);
 			// 创建摄像机位置
 			var initialOrientation = new Cesium.HeadingPitchRoll.fromDegrees(center.heading || 0, center.pitch || -90, center.roll || 0);
 			var centerCameraView = {
@@ -346,7 +348,10 @@
 			});
 			
 			viewer.scene.primitives.add(tileset);
-			
+			if(config.addtype === 'original'){
+				tileset.show = config.visible || false;
+				return tileset
+			}
 			tileset.readyPromise.then(function(tileset) {
 			   	var position = Cesium.Cartesian3.fromDegrees(config.center.x, config.center.y, config.center.z);
 			    var mat = Cesium.Transforms.eastNorthUpToFixedFrame(position);
@@ -361,14 +366,90 @@
 			    var translation=Cesium.Cartesian3.fromArray([tranConfig.x, tranConfig.y, tranConfig.z]);
 				var m = Cesium.Matrix4.fromTranslation(translation);
 				Cesium.Matrix4.multiply(mat, m, mat);
-			    tileset._root.transform = mat;			    
+			    tileset._root.transform = mat;		    
 			}).otherwise(function(error) {
 			    console.log(error);
 			});
 			tileset.show = config.visible || false;
 			return tileset
 		},
-		// 添加标记实体
+		// 获取时间作为id
+		getTimeToId: function(){
+			var data = new Date();
+			var y = data.getFullYear().toString();
+			var m = data.getMonth().toString();
+			var d = data.getDate().toString();
+			var h = data.getHours().toString();
+			var mi = data.getMinutes().toString();
+			var s = data.getSeconds().toString();
+			var mil = data.getMilliseconds().toString();
+			
+			var str = y + m + d + h + mi + s + mil;
+			return str;
+		},
+		// 添加标注点
+		drawMarkPoint: function(){
+			var logoUrl = './widgets/addmarker/img/marker.png';
+			var entitieId = this.getTimeToId();
+			this.drawMarkFlag = true;
+			this.drawMarkEntity = viewer.entities.add({
+				id : entitieId,
+				name : '我的标记',
+				show: false,
+		        //position : Cesium.Cartesian3.fromDegrees(),
+		        billboard : {
+		            image : logoUrl,
+		            scale : 0.8
+		        },
+			 	label : {
+				    text : '我的标记',
+				    font : '14pt monospace',
+				    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+				    outlineWidth : 2,
+				    //垂直位置
+				    verticalOrigin : Cesium.VerticalOrigin.BUTTON,
+				    //中心位置
+				    pixelOffset : new Cesium.Cartesian2(0, -30)
+			  	}
+		   	});
+		   	var scene = viewer.scene;
+       		var ellipsoid = scene.globe.ellipsoid;
+		   	var handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
+		   	handler.setInputAction(function(movement) {
+		   		if(!customMap.widget.drawMarkFlag){
+		   			return;
+		   		}
+	        	var cartesian = viewer.camera.pickEllipsoid(movement.endPosition, ellipsoid);
+	            if (cartesian) {
+	            	var markEntity = customMap.widget.drawMarkEntity;
+	            	if(!markEntity){
+	            		return
+	            	}
+					markEntity.position = cartesian;
+					markEntity.show = true;
+	            }
+	        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+	        
+	        handler.setInputAction(function(e) {
+		   		if(!customMap.widget.drawMarkFlag){
+		   			return;
+		   		}else{
+		   			customMap.widget.drawMarkFlag = false;
+		   			handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+		   			handler.removeInputAction(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+		   		}
+	        	var cartesian = viewer.camera.pickEllipsoid(e.position, ellipsoid);
+	            if (cartesian) {
+	            	var markEntity = customMap.widget.drawMarkEntity;
+	            	if(!markEntity){
+	            		return
+	            	}
+					markEntity.position = cartesian;
+					markEntity.show = true;
+	            }
+	        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+		},
+		// 从列表添加标记实体
 		addMapMarkLayer: function(config){
 			var data = this.getMarkData();
 			var logoUrl = './widgets/addmarker/img/marker.png';
@@ -392,7 +473,7 @@
 							    //垂直位置
 							    verticalOrigin : Cesium.VerticalOrigin.BUTTON,
 							    //中心位置
-							    pixelOffset : new Cesium.Cartesian2(0, -25)
+							    pixelOffset : new Cesium.Cartesian2(0, -30)
 						  	}
 					   });
 					}else{
@@ -402,7 +483,7 @@
 				}
 			}
 		},
-		// 隐藏所有标记实体
+		// 隐藏标记实体
 		hideMapMarkLayer: function(id){
 			if(id){
 				var entitie = viewer.entities.getById(id);
@@ -429,7 +510,6 @@
 						return;
 					}
 				}
-				console.log(data,this.getMarkData());
 			}else{
 				var data = this.getMarkData();
 				for(var i = 0, l = data.length; i < l; i++){
@@ -453,11 +533,20 @@
 		pickAndSelectObject: function (e) {
 		    //单击操作
 		    var selectObj = customMap.widget.pickEntity(viewer,e.position);
-		    if(selectObj && selectObj.type === '3dtitle'){
+		    if(selectObj && selectObj.type === '3dtitle' && selectObj.name === 'polySurface8'){
 		    	var data = customMap.config.customMap.operationallayers;
 				for(var i = 0, l = data.length; i < l; i++){
 					if(data[i].url === selectObj.id){
-						customMap.widget.show3DtitleDialog(data[i],e)
+						customMap.widget.show3DtitleDialog(data[i],e);
+						return;
+					}
+				}
+		    }else if(selectObj && selectObj.type === 'entity'){
+		    	var data = customMap.config.customMap.markerData;
+				for(var i = 0, l = data.length; i < l; i++){
+					if(data[i].id === selectObj.id || selectObj.id._id === data[i].id){
+						customMap.widget.showMarkDialog(data[i],e);
+						return;
 					}
 				}
 		    }
@@ -479,22 +568,26 @@
 					if(featureName && picked._content._tileset.url){
 						selectedEntity.url = picked._content._tileset.url;
 					}
-		    		if(!customMap.selectedEntitys){
+		    		if(!customMap.selected3dEntitys){
 		    			customMap.selected3dEntitys = [];
 		    		}
 		    		customMap.selected3dEntitys.push(selectedEntity);
 		    	}
 		        var id = Cesium.defaultValue(picked.id,picked.primitive.id);
 		        if(id instanceof Cesium.Entity){ // 实体id
+		        	if(!customMap.selectedMarkEntitys){
+		    			customMap.selectedMarkEntitys = [];
+		    		}
+		    		customMap.selectedMarkEntitys.push(id);
 		            return {id: id, type: 'entity'};
 		        }else if(featureName && picked._content._tileset.url){// 3dtitle url
-		        	return {id: picked._content._tileset.url, type: '3dtitle'};
+		        	return {id: picked._content._tileset.url, type: '3dtitle',name: featureName};
 		        }
 		    }
 		    return undefined;
 		},
+		// 双击操作
 		pickAndTrackObject: function(e) {
-	    	//双击操作
 	    	var entity = customMap.widget.pickEntity(viewer,e.position).id;
 		    if(entity){
 		        //将笛卡尔直角坐标系转化为经纬度坐标系
@@ -520,6 +613,7 @@
 		        } );
 		    }
 		},
+		// 显示3dtitle弹框
 		show3DtitleDialog: function(item,e){
 			var html = $('#popup_'+item.id+'');
 			if(html.length < 1){
@@ -531,6 +625,19 @@
 				this.positionPopUp(item,e);
 			}
 		},
+		// 显示地图标记弹框
+		showMarkDialog: function(item,e){
+			var html = $('#popup_'+item.id+'');
+			if(html.length < 1){
+				var infoDiv = this.getMarkDialogHtml(item);
+				$('#pupup-all-view').append(infoDiv);
+				this.positionPopUp(item,e);
+			}else{
+				html.show();
+				this.positionPopUp(item,e);
+			}
+		},
+		// 3dtitle弹框模板
 		get3DtitleDialogHtml: function(item) {
 			var html = 
 			'<div id="popup_'+item.id+'" class="cesium-popup">'+
@@ -553,6 +660,32 @@
 								'&nbsp;&nbsp;<input type="button" class="btn btn-primary  btn-sm" value="关闭" onclick="customMap.widget.closeDialog('+item.id+')">'+
 							'</div>'+
 							'</form>'+
+						'</div>'+
+					'</div>'+     
+				'</div>'+      
+				'<div class="cesium-popup-tip-container">'+
+					'<div class="cesium-popup-tip cesium-popup-background"></div>'+
+				'</div>'+
+			'</div>';
+			return html
+		},
+		// 地图标记模板
+		getMarkDialogHtml: function(item){
+			var html = 
+			'<div id="popup_'+item.id+'" class="cesium-popup">'+
+				'<a class="cesium-popup-close-button cesium-popup-color" href="javascript:customMap.widget.closeDialog('+item.id+')">×</a>'+           
+				'<div class="cesium-popup-content-wrapper cesium-popup-background">'+
+					'<div class="cesium-popup-content cesium-popup-color">'+
+						'<div class="addmarker-popup-titile">我的标记</div>'+
+						'<div class="addmarker-popup-content">'+
+							'<div class="form-group">'+
+								'<label for="addmarker_attr_name">名称：</label>'+
+								'<span>'+item.name+'</span>'+
+							'</div>'+
+							'<div class="form-group">'+
+								'<label for="addmarker_attr_name">备注：</label>'+
+								'<span>'+item.remark+'</span>'+
+							'</div>'+
 						'</div>'+
 					'</div>'+     
 				'</div>'+      

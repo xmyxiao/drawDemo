@@ -2,7 +2,7 @@
     "serverURL": "",
     "customMap": {
     	"googleUrl": "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}&s=Gali",
-    	"center": { "y": 26.022977866300007, "x": 119.26484332504271, "z": 2432, "heading": 0, "pitch": -30, "roll": 0 },
+    	"center": { "y": 26.022977866300007, "x": 119.26484332504271, "z": 10242432, "heading": 0, "pitch": -90, "roll": 0 },
     	"toolBar": [
     		{
     			"name": "底图", 
@@ -51,6 +51,7 @@
 							"width": 300,
 							"height": 400
 						},
+						"windowClose":"closeMarkerDialog()",
 						"style": "dark",
                     	"widget": "widgets/addmarker/view.html" 
                     }
@@ -93,7 +94,7 @@
                 "id": 10,
                 "name": "我的标记",
                 "type": "mapMark",
-                "visible": true
+                "visible": false
             },
         	{
                 "id": 20,
@@ -130,13 +131,14 @@
             {
                 "id": 2030,
                 "pid": 20,
-                "name": "倾斜摄影",
+                "name": "建筑模型",
                 "type": "group"
             },
             {
                 "id": 203014,
                 "pid": 2030,
                 "type": "3dtiles",
+                "addtype": "change",
                 "name": "新园区",
                 "url": "data/3dtitle/Gjs/tileset.json",                                     
                 "maximumScreenSpaceError": 2,
@@ -149,6 +151,16 @@
                 "center": { "y": 26.037531839290523, "x": 119.21113231923478, "z": -0.0030133947920302014, "heading": 119.22027407825902, "pitch": -34.5, "roll": 0.2 },    
                 "visible": true,
                 "flyTo": true
+            },
+            {
+                "id": 203015,
+                "pid": 2030,
+                "type": "3dtiles",
+                "addtype": "original",
+                "name": "上海市区",
+                "offset": { "z": 1, "x": 1, "y": 1},
+                "url": "http://data.marsgis.cn/3dtiles/jzw-shanghai/tileset.json",
+                "center": { "y": 31.257341, "x": 121.466139, "z": 2170.8, "heading": 122.2, "pitch": -31.8, "roll": 0.2 }
             }
             
         ],
@@ -156,14 +168,14 @@
         	{
         		"id": "20190529153913", 
         		"center": { "y": 37.827257, "x": 117.220203},
-        		"name": "1", 
-        		"remark": ""
+        		"name": "河北省", 
+        		"remark": "经度：117.220203"
         	},
         	{
         		"id": "20190529153914", 
         		"center": { "y": 26.827257, "x": 119.220203},
-        		"name": "2", 
-        		"remark": ""
+        		"name": "福建省", 
+        		"remark": "经度：119.220203"
         	}
         ]
     }

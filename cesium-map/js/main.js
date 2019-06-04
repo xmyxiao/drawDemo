@@ -115,10 +115,15 @@ function createMapviewer(){
 	viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(customMap.widget.pickAndSelectObject,Cesium.ScreenSpaceEventType.LEFT_CLICK);
 	viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(customMap.widget.pickAndTrackObject,Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 	
+	// 视轴变化
 	removeHandler = viewer.scene.postRender.addEventListener(function () {
 		if(!customMap.selected3dEntitys){
 			customMap.selected3dEntitys = [];
 		}
+		if(!customMap.selectedMarkEntitys){
+			customMap.selectedMarkEntitys = [];
+		}
+		// 3dtitle弹框位置更新
 		for(var i = 0, l = customMap.selected3dEntitys.length; i < l; i++){
 			var entity3d = customMap.selected3dEntitys[i];
 			var data = customMap.config.customMap.operationallayers;
@@ -130,6 +135,9 @@ function createMapviewer(){
 			}
 			if(entity3d.cartesian){
 				var changedC = Cesium.SceneTransforms.wgs84ToWindowCoordinates(viewer.scene, entity3d.cartesian);
+				if(!changedC){
+					return;
+				}
 				var point = {
 					position : {
 						x: changedC.x,
@@ -139,6 +147,33 @@ function createMapviewer(){
 				customMap.widget.positionPopUp(item,point);
 			}
 			
+		}
+		// 实体弹框位置更新
+		for(var i = 0, l = customMap.selectedMarkEntitys.length; i < l; i++){
+			var markEntity = customMap.selectedMarkEntitys[i];
+			var data = customMap.config.customMap.markerData;
+			var item = '';
+			if(!markEntity.show){
+				return;
+			}
+			for(var i = 0, l = data.length; i < l; i++){
+				if(data[i].id === markEntity._id){
+					item = data[i];
+				}
+			}
+			if(markEntity._id && markEntity._position._value){
+				var changedC = Cesium.SceneTransforms.wgs84ToWindowCoordinates(viewer.scene, markEntity._position._value);
+				if(!changedC){
+					return;
+				}
+				var point = {
+					position : {
+						x: changedC.x,
+						y: changedC.y
+					}
+				}
+				customMap.widget.positionPopUp(item,point);
+			}
 		}
 	});
 
