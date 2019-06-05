@@ -32,3 +32,35 @@
     color: #333;
     overflow: hidden;
 }
+.dialog-center-icon{
+	display: inline-block;
+	width: 17px;
+	height: 21px;
+	background: url(../img/dialog/icon.png);
+	vertical-align: middle;
+}
+.dialog-center-text{
+	color: #fff;
+	padding-left: 2px;
+	cursor: pointer;
+}
+.map-dialog-foot{
+	float: right;
+    text-align: left;
+    width: 280px;
+    padding-top: 10px;
+    color: #02e9ff;
+}
+
+.layui-layer.layer-map-dialog .layui-layer-setwin .layui-layer-close.layui-layer-close1{
+	background: url(../lib/layer/theme/default/icon.png) no-repeat;
+	background-position: 1px -40px;
+}
+.layui-layer.layer-map-dialog .layui-layer-setwin .layui-layer-max{
+	background: url(../lib/layer/theme/default/icon.png) no-repeat;
+	background-position: -32px -40px;
+}
+.layui-layer.layer-map-dialog .layui-layer-setwin .layui-layer-max.layui-layer-maxmin{
+	background: url(../lib/layer/theme/default/icon.png) no-repeat;
+    background-position: -65px -40px;
+}

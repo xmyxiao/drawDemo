@@ -596,7 +596,7 @@
 		},
 		// 3dtitle弹框模板
 		get3DtitleDialogHtml: function(item) {
-			var html = 
+			/*var html = 
 			'<div id="popup_'+item.id+'" class="cesium-popup">'+
 				'<a class="cesium-popup-close-button cesium-popup-color" href="javascript:customMap.widget.closeDialog('+item.id+')">×</a>'+           
 				'<div class="cesium-popup-content-wrapper cesium-popup-background">'+
@@ -623,6 +623,22 @@
 				'<div class="cesium-popup-tip-container">'+
 					'<div class="cesium-popup-tip cesium-popup-background"></div>'+
 				'</div>'+
+			'</div>';*/
+			var html = 
+			'<div id="popup_'+item.id+'" class="map-dialog cesium-popup">'+
+				'<a class="cesium-popup-close-button cesium-popup-color" href="javascript:customMap.widget.closeDialog('+item.id+')">×</a>'+
+				'<div class="map-dialog-title">福建中海创科技有限公司</div>'+
+				'<ul class="map-dialog-center">'+
+					'<li>'+
+						'<i class="dialog-center-icon"></i>'+
+						'<span class="dialog-center-text" data-url="http://design.gkiiot.com/" onclick="customMap.widget.openLayer(this)">海创物联网</span>'+
+					'</li>'+
+					'<li>'+
+						'<i class="dialog-center-icon"></i>'+
+						'<span class="dialog-center-text" data-url="http://wlw.fdauto.com/" onclick="customMap.widget.openLayer(this)">云平台</span>'+
+					'</li>'+
+				'</ul>'+
+				'<div class="map-dialog-foot">海西园二号楼</div>'+
 			'</div>';
 			return html
 		},
@@ -632,8 +648,22 @@
 			if(html.length < 1){
 				return;
 			}
-			var x = e.position.x - (html.width()) / 2;
-			var y = e.position.y - (html.height());
+			var scene = viewer.scene;
+			var pick3d= new Cesium.Cartesian2(e.position.x,e.position.y);
+			var cartesian = scene.globe.pick(viewer.camera.getPickRay(pick3d), scene)
+			if(config.type && config.type === '3dtiles'){
+				var x = e.position.x - 30;
+				var y = e.position.y - (html.height()) + 30;
+				for(var i = 0, l = customMap.selected3dEntitys.length; i < l; i++){
+					var item = customMap.selected3dEntitys[i];
+					if(config.url === item.url && item.cartesian != cartesian){
+						item.cartesian = cartesian;
+					}
+				}
+			}else{
+				var x = e.position.x - (html.width()) / 2;
+				var y = e.position.y - (html.height());
+			}
 			html.css('transform', 'translate3d(' + x + 'px, ' + y + 'px, 0)');
 		},
 		// 关闭弹框
@@ -644,8 +674,9 @@
 			}
 		},
 		// 打开新的页面
-		openLayer: function(id){
-			var url = 'http://design.gkiiot.com/';
+		openLayer: function(item){
+			var url = $(item).attr('data-url');
+			var name = $(item).text();
 			var center = {
 				x: window.innerWidth - 200,
 				y: window.innerHeight - 200,
@@ -654,13 +685,17 @@
 			if(center.y < 600){center.y = 600}
 			layer.open({
 		    	type: 2,
-		      	title: '海创物联',
-		      	skin: "layer-mars-dialog animation-scale-up",
+		      	title: name,
+		      	skin: "layer-map-dialog animation-scale-up",
 		      	shadeClose: true,
 		      	shade: false,
 		      	maxmin: true, //开启最大化最小化按钮
 		      	area: [center.x + 'px', center.y + 'px'],
-		      	content: url
+		      	content: url,
+		      	zIndex: layer.zIndex,
+				success: function(layero){
+					layer.setTop(layero);
+				}
 		    });
 		}
 	};
