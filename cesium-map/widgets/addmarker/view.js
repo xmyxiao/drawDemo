@@ -59,7 +59,6 @@ function initWidgetView(t) {
 		})
 	}), refMarkerList()
 	showMapListMark();
-	
 }
 
 function showMapListMark(){
@@ -74,6 +73,13 @@ function showMapListMark(){
 		z: 1000000
 	}
 	thisWidget.centerAt({center})
+	var list = parent.customMap.config.customMap.operationallayers;
+	for(var i = 0, l = list.length; i < l; i++){
+		if(list[i].type === 'mapMark'){
+			list[i].visible = true;
+		}
+	}
+	
 }
 
 function refMarkerList() {
