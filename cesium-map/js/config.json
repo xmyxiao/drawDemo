@@ -269,6 +269,23 @@
                 "center": { "y":26.0430, "x": 119.20718, "z": 34.03060064278471, "heading": 12.759215894754293, "pitch": -34.5, "roll": 0.8 },    
                 "visible": true,
                 "flyTo": true
+            },
+            {
+                "id": 203021,
+                "pid": 2030,
+                "type": "3dtiles",
+                "name": "仓山区",
+                "url": "data/3dtitle/cang_shan/tileset.json",                                     
+                "maximumScreenSpaceError": 2,
+                "maximumMemoryUsage": 8192,
+                "dynamicScreenSpaceError": true,
+                "cullWithChildrenBounds": false,
+                "luminanceAtZenith": 0.6,   
+                "offset": { "z": 1, "x": 2650, "y": 680},
+				"position": { "x": 119.2231, "y": 26.0636, "z": 1043.7, "heading": 125, "pitch": -10, "roll": 0},    
+				"center": { "y":26.021524005342712, "x": 119.29696128385588, "z":360.50182467722266, "heading":0, "pitch": 0, "roll": 1 },   
+                "visible": true,
+                "flyTo": false
             }
         ],
         "markerData":[
