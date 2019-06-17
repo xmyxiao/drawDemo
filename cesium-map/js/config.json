@@ -286,7 +286,42 @@
 				"center": { "y":26.021524005342712, "x": 119.29696128385588, "z":360.50182467722266, "heading":0, "pitch": 0, "roll": 1 },   
                 "visible": true,
                 "flyTo": false
-            }
+            },
+			{
+				"id": 203021,
+				"pid": 2030,
+				"type": "3dtiles",
+				"name": "上海陆家嘴",
+				"url": "data/3dtitle/ce/tileset.json",
+				"maximumScreenSpaceError": 2,
+				"maximumMemoryUsage": 8192,
+				"dynamicScreenSpaceError": true,
+				"cullWithChildrenBounds": false,
+				"luminanceAtZenith": 0.6,
+				"offset": {
+					"z": 1,
+					"x": -230,
+					"y": -380
+				},
+				"position": {
+					"y": 31.231373776320726,
+					"x": 121.45926253374367,
+					"z": 654.38441382036353,
+					"heading": 90,
+					"pitch": -18.5,
+					"roll": -0.2
+				},
+				"center": {
+					"y": 31.239373776320726,
+					"x": 121.49426253374367,
+					"z": 104.38441382036353,
+					"heading": 0,
+					"pitch": 0,
+					"roll": 1
+				},
+				"visible": true,
+				"flyTo": true
+			}
         ],
         "markerData":[
         	{
